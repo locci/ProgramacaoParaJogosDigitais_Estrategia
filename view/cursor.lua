@@ -4,20 +4,19 @@ local Cursor = require 'common.class' ()
 
 local CELL_SIZE = 36
 
-function Cursor:_init()
+function Cursor:_init(battlefield)
   self.position = Vec()
-end
-
-function Cursor:set_position(x, y)
-  self.position:set(x, y)
+  self.battlefield = battlefield
 end
 
 function Cursor:get_position()
   return self.position:get()
 end
 
-function Cursor:move(diff)
-  self.position:add(diff)
+function Cursor:update(_)
+  local mouse_pos = Vec(love.mouse.getPosition())
+  local rounded = self.battlefield:round_to_tile(mouse_pos)
+  self.position:set(rounded:get())
 end
 
 function Cursor:draw()
