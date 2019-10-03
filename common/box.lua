@@ -8,6 +8,11 @@ function Box:_init(left, right, top, bottom)
   self.bottom = bottom or 0
 end
 
+function Box.from_vec(pos, halfsize)
+  return Box(pos.x - halfsize.x, pos.x + halfsize.x,
+             pos.y - halfsize.y, pos.y + halfsize.y)
+end
+
 function Box:__tostring()
   return string.format("box: left=%.2f right=%.2f top=%.2f bottom=%.2f",
                        self:get())

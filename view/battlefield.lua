@@ -3,18 +3,29 @@ local Box = require 'common.box'
 local Vec = require 'common.vec'
 local BattleField = require 'common.class' ()
 
-local VPADDING = 64
-
 function BattleField:_init()
-  self.bounds = Box(32, 32+512, 32, 32 + VPADDING*2 + 64*4 + 16*3)
+  local h = love.graphics.getHeight()
+  local center = Vec(1, 1) * h / 2
+  local size = Vec(1, 1) * 32 * 8
+  self.bounds = Box.from_vec(center, size)
 end
 
-function BattleField:west_team_origin()
-  return Vec(self.bounds.left + 64, self.bounds.top + 64)
+function BattleField:center()
+  local b = self.bounds
+  return (Vec(b.left, b.top) + Vec(b.right, b.bottom)) / 2
 end
 
-function BattleField:east_team_origin()
-  return Vec(self.bounds.right - 64, self.bounds.top + 64)
+function BattleField:round_to_tile(pos)
+  local center = self:center()
+  local dist = pos - center
+  local tile = ((dist + Vec(16, 16)) / 32):floor()
+  tile:clamp(7, 7)
+  return center + tile * 32
+end
+
+function BattleField:tile_to_screen(x, y)
+  local center = self:center()
+  return center + Vec(x, y):floor() * 32
 end
 
 function BattleField:draw()

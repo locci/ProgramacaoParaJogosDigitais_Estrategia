@@ -69,12 +69,9 @@ function Vec:add(other)
   self.y = self.y + other.y
 end
 
-function Vec:clamp(max)
-  local length = self:length()
-  if length >= max then
-    self.x = self.x / length * max
-    self.y = self.y / length * max
-  end
+function Vec:clamp(x_max, y_max)
+  self.x = math.max(-x_max, math.min(x_max, self.x))
+  self.y = math.max(-y_max, math.min(y_max, self.y))
 end
 
 function Vec:floor()

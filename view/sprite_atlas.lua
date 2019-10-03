@@ -36,6 +36,10 @@ function AtlasRenderer:add(name, pos, sprite_id)
   return instance
 end
 
+function AtlasRenderer:remove(name)
+  self.instances[name] = nil
+end
+
 function AtlasRenderer:get(name)
   return self.instances[name]
 end
