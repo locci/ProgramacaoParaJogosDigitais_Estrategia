@@ -112,15 +112,15 @@ precisam fazer as tarefas na ordem, contanto que satisfaçam seus pré-requisito
 No relatório, listem quais critérios de cada tarefa vocês cumpriram,
 preferencialmente usando os códigos.
 
-### Q**u**alidade de código (Ux)
+### Q**u**alidade de código (Qx)
 
 | Código | Critério                                                   | Valor  |
 | ------ | ---------------------------------------------------------- | ------ |
-| U1     | Passar no [luacheck](https://github.com/mpeterv/luacheck)  | +5     |
-| U2     | Separação clara entre Model, View e os estados             | +3     |
-| U3     | Módulos de até 200 linhas                                  | +2     |
-| U4     | Funções de até 20 linhas                                   | +2     |
-| U5     | Linhas com até 100 caracteres                              | +2     |
+| Q1     | Passar no [luacheck](https://github.com/mpeterv/luacheck)  | +5     |
+| Q2     | Separação clara entre Model, View e os estados             | +3     |
+| Q3     | Módulos de até 200 linhas                                  | +2     |
+| Q4     | Funções de até 20 linhas                                   | +2     |
+| Q5     | Linhas com até 100 caracteres                              | +2     |
 
 ### **J**uiciness (Jx)
 
