@@ -50,6 +50,7 @@ end
 function PlayStageState:_load_units()
   local pos = self.battlefield:tile_to_screen(-6, 6)
   self.units = {}
+  -- Parametrizar a cidade desenhada
   self:_create_unit_at('capital', pos)
   self.wave = Wave(self.stage.waves[1])
   self.wave:start()
@@ -63,9 +64,12 @@ function PlayStageState:_create_unit_at(specname, pos)
 end
 
 function PlayStageState:on_mousepressed(_, _, button)
-  if button == 1 then
-    self:_create_unit_at('warrior', Vec(self.cursor:get_position()))
-  end
+  local name
+  print("on_mousepressed button=", button)
+  if button ~= 1 then name = 'warrior'
+  else name = 'archer' end
+  -- Parametrizar o heroi a ser posto na tela
+  self:_create_unit_at(name, Vec(self.cursor:get_position()))
 end
 
 function PlayStageState:update(dt)
@@ -75,6 +79,7 @@ function PlayStageState:update(dt)
   while pending > 0 do
     local x, y = rand(5, 7), -rand(5, 7)
     local pos = self.battlefield:tile_to_screen(x, y)
+    -- Parametrizar o monstro a ser posto na tela
     local monster = self:_create_unit_at('green_slime', pos)
     self.monsters[monster] = true
     pending = pending - 1
@@ -86,4 +91,3 @@ function PlayStageState:update(dt)
 end
 
 return PlayStageState
-
