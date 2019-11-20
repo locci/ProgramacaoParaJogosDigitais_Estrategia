@@ -1,15 +1,13 @@
 --
 -- Created by IntelliJ IDEA.
 -- User: alexandre
--- Date: 11/11/2019
--- Time: 10:21
+-- Date: 20/11/2019
+-- Time: 12:22
 -- To change this template use File | Settings | File Templates.
 --
-
 return {
-    title = 'Teste',
-    waves = {
-        { blue_slime = 1}
-    }
+    name = "tree",
+    max_hp = 4,
+    appearance = 'tree'
 }
 

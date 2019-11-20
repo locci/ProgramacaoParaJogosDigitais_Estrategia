@@ -13,7 +13,8 @@ function love.load()
   }
   _stack = Stack(_game)
   _stack:push('choose_stage')
-end
+  _G.landscape = {}
+  end
 
 function love.update(dt)
   _stack:update(dt)

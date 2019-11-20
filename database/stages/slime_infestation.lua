@@ -2,9 +2,14 @@
 return {
   title = 'Slime Infestation',
   waves = {
-    { green_slime = 10 },
-    { green_slime = 20 },
-    { blue_slime = 5, green_slime = 30 },
-  }
+    { blue_slime = 0,  },
+    { green_slime = 0 },
+    { blue_slime = 0, green_slime = 0 },
+  },
+  landscape ={
+    {'tree', 3 },
+    {'tree', 4 },
+    {'tree', 5 },
+    }
 }
 

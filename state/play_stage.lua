@@ -47,10 +47,30 @@ function PlayStageState:_load_view()
   self:view('hud'):add('stats', self.stats)
 end
 
+function PlayStageState:_load_Landscape(battlefield, landscape)
+
+  local unit = landscape[1]
+  local length = landscape[2]
+  math.randomseed(os.time())
+  local tab = {}
+  for i=1, length do
+    local x = math.random(-7,7)
+    local y = math.random(-7,7)
+    table.insert(tab,x)
+    table.insert(tab,y)
+    table.insert(_G.landscape,tab)
+    local pos = battlefield:tile_to_screen(x, y)
+    self:_create_unit_at(unit, pos)
+  end
+
+end
+
 function PlayStageState:_load_units()
-  local pos = self.battlefield:tile_to_screen(-6, 6)
+  local pos = self.battlefield:tile_to_screen(0, 0)--mudar para o centro
   self.units = {}
   self:_create_unit_at('capital', pos)
+  local landscape = self.stage.landscape[1]
+  self:_load_Landscape(self.battlefield, landscape)
   self.wave = Wave(self.stage.waves[1])
   self.wave:start()
   self.monsters = {}

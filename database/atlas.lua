@@ -37,6 +37,10 @@ return {
     priest = {
       frame = { 24, 0 },
       color = 'white'
+    },
+    tree = {
+      frame = { 3, 1 },
+      color = 'green'
     }
   }
 }
