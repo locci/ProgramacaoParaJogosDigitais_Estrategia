@@ -48,14 +48,12 @@ function PlayStageState:_load_view()
 end
 
 local check_position = function(x, y)
-
   for _, pos in ipairs(_G.landscape) do
     if pos[1] == x and pos[2] == y then
       return false
     end
   end
   return true
-
 end
 
 function PlayStageState:_load_Landscape(battlefield, landscape)

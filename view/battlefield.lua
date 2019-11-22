@@ -28,10 +28,6 @@ function BattleField:tile_to_screen(x, y)
   return center + Vec(x, y):floor() * 32
 end
 
-function BattleField:landscape()
-
-end
-
 function BattleField:draw()
   local g = love.graphics
   g.setColor(1, 1, 1)
