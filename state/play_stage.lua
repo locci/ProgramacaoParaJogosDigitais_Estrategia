@@ -59,8 +59,7 @@ local check_position = function(x, y)
 end
 
 function PlayStageState:_load_Landscape(battlefield, landscape)
-  local worldSize = {-7,7}
-  math.randomseed(os.time())
+  local worldSize = {-7,7}  math.randomseed(os.time())
   for _, object in ipairs(landscape) do
       local unit = object['type']
       local length = object['num']
