@@ -5,6 +5,8 @@ local View  = require 'view'
 local _game
 local _stack
 
+local castlePos = {0,0} --pos inicial castelo
+
 function love.load()
   _game = {
     bg_view = View(),
@@ -14,7 +16,11 @@ function love.load()
   _stack = Stack(_game)
   _stack:push('choose_stage')
   _G.landscape = {}
+  table.insert(_G.landscape, castlePos)
+
   end
+
+
 
 function love.update(dt)
   _stack:update(dt)

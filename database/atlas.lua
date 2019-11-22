@@ -41,6 +41,10 @@ return {
     tree = {
       frame = { 3, 1 },
       color = 'green'
+    },
+    rock = {
+      frame = { 5, 2 },
+      color = 'gray'
     }
   }
 }

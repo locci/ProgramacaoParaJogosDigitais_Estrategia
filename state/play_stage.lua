@@ -47,22 +47,37 @@ function PlayStageState:_load_view()
   self:view('hud'):add('stats', self.stats)
 end
 
-function PlayStageState:_load_Landscape(battlefield, landscape)
+local check_position = function(x, y)
 
-  local unit = landscape[1]
-  local length = landscape[2]
-  math.randomseed(os.time())
-  local tab = {}
-  for i=1, length do
-    local x = math.random(-7,7)
-    local y = math.random(-7,7)
-    table.insert(tab,x)
-    table.insert(tab,y)
-    table.insert(_G.landscape,tab)
-    local pos = battlefield:tile_to_screen(x, y)
-    self:_create_unit_at(unit, pos)
+  for _, pos in ipairs(_G.landscape) do
+    if pos[1] == x and pos[2] == y then
+      return false
+    end
   end
+  return true
 
+end
+
+function PlayStageState:_load_Landscape(battlefield, landscape)
+  local worldSize = {-7,7}
+  math.randomseed(os.time())
+  for _, object in ipairs(landscape) do
+      local unit = object['type']
+      local length = object['num']
+      local tab = {}
+      for i=1, length do
+        local x = math.random(worldSize[1],worldSize[2])
+        local y = math.random(worldSize[1],worldSize[2])
+        if check_position(x, y) then
+          table.insert(tab,x)
+          table.insert(tab,y)
+          table.insert(_G.landscape,tab)
+          tab = {}
+          local pos = battlefield:tile_to_screen(x, y)
+          self:_create_unit_at(unit, pos)
+        end
+      end
+  end
 end
 
 function PlayStageState:_load_units()

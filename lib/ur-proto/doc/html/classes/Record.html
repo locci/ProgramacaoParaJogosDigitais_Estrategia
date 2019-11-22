@@ -1,0 +1,602 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Unlimited Rulebook Prototype's reference</title>
+<link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script
+src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+</script>
+<link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+<div class="row">
+<div class="col-xs-0 col-md-1 col-lg-2"></div>
+<div class="col-xs-12 col-md-10 col-lg-8">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse"
+data-target="#luxNavbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="../index.html">
+Unlimited Rulebook Prototype
+</a>
+</div>
+<div class="collapse navbar-collapse" id="luxNavbar">
+<ul class="nav navbar-nav">
+<li class="dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown"
+	href="#">
+Topics
+	<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu">
+	<li
+	>
+	<a href="../topics/Manual.md.html">
+Manual
+	</a>
+	</li>
+	<li
+	>
+	<a href="../topics/Architecture.md.html">
+Architecture
+	</a>
+	</li>
+	</ul>
+	</li>
+<li class="dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown"
+	href="#">
+Classes
+	<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu">
+	<li
+	>
+	<a href="../classes/RuleEngine.html">
+RuleEngine
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/Entity.html">
+Entity
+	</a>
+	</li>
+	<li
+	class="active">
+	<a href="../classes/Record.html">
+Record
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/RuleSet.html">
+RuleSet
+	</a>
+	</li>
+	</ul>
+	</li>
+	</ul>
+	<ul class="nav navbar-nav navbar-right">
+	<li>
+	<a href="https://gitlab.com/unlimited-rulebook/ur-proto">
+	GitLab Page
+	</a>
+	</li>
+	</ul>
+	</div>
+	</div>
+	<div class="col-xs-0 col-md-1 col-lg-2"></div>
+	</div>
+	</div>
+	</nav>
+
+	<div class="container-fluid">
+
+
+	<div class="row">
+	<div class="col-xs-0 col-md-2 col-lg-3"></div>
+	<div class="col-xs-12 col-md-8 col-lg-6">
+	<div id="main">
+
+
+	<!-- Menu -->
+
+
+
+	<div id="content">
+
+
+	<h1>
+Record
+	<small>class</small>
+	</h1>
+
+<div class="row" style="height:2em"></div>
+
+	<p>
+	Stores the economy state.
+  Only a few classes in the unlimited rulebook have access to objects of the
+  <a href="../classes/Record.html#">Record</a> class. Any and all state is kept here, using a property-centric
+  object model (or &ldquo;pure entity-component&rdquo;). It loosely resembles a database
+  and the fact that the API looks vaguely similar to Ruby on Rails is no
+  coincidence.
+	</p>
+
+
+
+
+
+	<h2>
+	<a name="Methods"></a>
+Methods
+	</h2>
+
+	<dl class="function">
+	<dt>
+	<a name = "Record:new_property"></a>
+	<h3 class="text-primary">
+	Record:new_property&nbsp;(name, fields)
+	</h3>
+	</dt>
+	<dd>
+	Defines a new property specification.
+  A property is a table with predetermined fields, much like a struct in C.
+  You define a new property by providing default values for its fields.
+
+	<h4>Parameters:</h4>
+										<ul>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>
+	</strong>
+	name</kbd>
+	<p>
+ The name of the new property
+	</p>
+	</li>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a>
+	</strong>
+	fields</kbd>
+	<p>
+ A table with the default field values
+	</p>
+	</li>
+	</ul>
+
+
+	<h4>Usage:</h4>
+	<ul>
+
+	<pre class="example">record:new_property(<span class="string">'spellcaster'</span>, { total_mana = <span class="number">10</span> })</pre>
+
+	</ul>
+
+
+	</dd>
+<div class="row" style="height:2em"></div>
+	<dt>
+	<a name = "Record:set"></a>
+	<h3 class="text-primary">
+	Record:set&nbsp;(e, name, field, value)
+	</h3>
+	</dt>
+	<dd>
+	Sets (creating, if necessary) the property fields of an entity.
+  It has two forms. In the first, a single field is set. In the second,
+  multiple fields are set at once.
+
+	<h4>Parameters:</h4>
+										<ul>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="../classes/Entity.html#">Entity</a>
+	</strong>
+	e</kbd>
+	<p>
+ The entity being assigned the property
+	</p>
+	</li>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>
+	</strong>
+	name</kbd>
+	<p>
+ The name of the property
+	</p>
+	</li>
+	<li>
+	<kbd>
+	<strong class="text-type">
+	any
+	</strong>
+	field</kbd>
+	<p>
+ The name of the field being set, or a table setting multiple
+  fields
+	</p>
+	</li>
+	<li>
+	<kbd>
+	<strong class="text-type">
+	any
+	</strong>
+	value</kbd>
+	<p>
+ If <code>field</code> is a field name, this must be the field value
+	</p>
+	</li>
+	</ul>
+
+
+	<h4>Usage:</h4>
+	<ul>
+
+	<pre class="example"><span class="comment">-- first form
+</span>record:set(e, <span class="string">'creature'</span>, <span class="string">'power'</span>, <span class="number">3</span>)
+<span class="comment">-- second form
+</span>record:set(e, <span class="string">'creature'</span>, { power = <span class="number">3</span>, toughness = <span class="number">4</span> })</pre>
+
+	</ul>
+
+
+	</dd>
+<div class="row" style="height:2em"></div>
+	<dt>
+	<a name = "Record:is"></a>
+	<h3 class="text-primary">
+	Record:is&nbsp;(e, name)
+	</h3>
+	</dt>
+	<dd>
+	Tells whether an <a href="../classes/Entity.html#">Entity</a> has a certain property assigned to it.
+
+
+
+	<h4>Parameters:</h4>
+										<ul>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="../classes/Entity.html#">Entity</a>
+	</strong>
+	e</kbd>
+	<p>
+ The tested entity
+	</p>
+	</li>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>
+	</strong>
+	name</kbd>
+	<p>
+ The property name being checked
+	</p>
+	</li>
+	</ul>
+
+	<h4>Returns:</h4>
+	<ol>
+
+	<kbd><strong class="text-type">
+	<span class="type">bool</span></strong></kbd>
+	<p>
+Whether the entity has the specified property
+	</p>
+
+	</ol>
+
+	<h4>Usage:</h4>
+	<ul>
+
+	<pre class="example"><span class="keyword">if</span> record:is(e, <span class="string">'creature'</span>) <span class="keyword">then</span>
+  <span class="global">print</span>(<span class="string">"It's a creature!"</span>)
+<span class="keyword">end</span></pre>
+
+	</ul>
+
+
+	</dd>
+<div class="row" style="height:2em"></div>
+	<dt>
+	<a name = "Record:get"></a>
+	<h3 class="text-primary">
+	Record:get&nbsp;(e, name, field)
+	</h3>
+	</dt>
+	<dd>
+	Gets a property field.
+
+
+
+	<h4>Parameters:</h4>
+										<ul>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="../classes/Entity.html#">Entity</a>
+	</strong>
+	e</kbd>
+	<p>
+ The entity being whose property is being read
+	</p>
+	</li>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>
+	</strong>
+	name</kbd>
+	<p>
+ The name of the property
+	</p>
+	</li>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>
+	</strong>
+	field</kbd>
+	<p>
+ The name of the property&rsquo;s field
+	</p>
+	</li>
+	</ul>
+
+	<h4>Returns:</h4>
+	<ol>
+
+	<kbd><strong class="text-type">
+	any</strong></kbd>
+	<p>
+The value of the entity&rsquo;s property field
+	</p>
+
+	</ol>
+
+	<h4>Usage:</h4>
+	<ul>
+
+	<pre class="example"><span class="keyword">local</span> power = record:get(e, <span class="string">'creature'</span>, <span class="string">'power'</span>)</pre>
+
+	</ul>
+
+
+	</dd>
+<div class="row" style="height:2em"></div>
+	<dt>
+	<a name = "Record:all"></a>
+	<h3 class="text-primary">
+	Record:all&nbsp;(name)
+	</h3>
+	</dt>
+	<dd>
+	Lists all entities with the given property.
+  The result is NOT sorted.
+
+	<h4>Parameters:</h4>
+										<ul>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>
+	</strong>
+	name</kbd>
+	<p>
+ Name of the property
+	</p>
+	</li>
+	</ul>
+
+	<h4>Returns:</h4>
+	<ol>
+
+	<kbd><strong class="text-type">
+	<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></strong></kbd>
+	<p>
+A sequence containing all entities with the given property
+	</p>
+
+	</ol>
+
+	<h4>Usage:</h4>
+	<ul>
+
+	<pre class="example"><span class="keyword">for</span> _, e <span class="keyword">in</span> <span class="global">ipairs</span>(record:all(<span class="string">'creature'</span>)) <span class="keyword">do</span>
+  e:check_something()
+<span class="keyword">end</span>
+<span class="comment">-- If you only want to count, the returned table has a 'n' field for that
+</span><span class="keyword">if</span> record:all(<span class="string">'player'</span>).n == <span class="number">1</span> <span class="keyword">then</span>
+  <span class="global">print</span>(<span class="string">"Aaaaand we have a winner!"</span>)
+<span class="keyword">end</span></pre>
+
+	</ul>
+
+
+	</dd>
+<div class="row" style="height:2em"></div>
+	<dt>
+	<a name = "Record:where"></a>
+	<h3 class="text-primary">
+	Record:where&nbsp;(name, match)
+	</h3>
+	</dt>
+	<dd>
+	Lists all entities that match the fields for a single property
+  Fields not specified in the property definition are ignored.
+ The result is
+  NOT sorted.
+
+	<h4>Parameters:</h4>
+										<ul>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>
+	</strong>
+	name</kbd>
+	<p>
+ A property name
+	</p>
+	</li>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a>
+	</strong>
+	match</kbd>
+	<p>
+ A table with the values expected for the property fields
+	</p>
+	</li>
+	</ul>
+
+	<h4>Returns:</h4>
+	<ol>
+
+	<kbd><strong class="text-type">
+	<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></strong></kbd>
+	<p>
+A sequence containing entities whose <code>name</code>-property have
+  field values matching those of the <code>match</code> parameter
+	</p>
+
+	</ol>
+
+	<h4>Usage:</h4>
+	<ul>
+
+	<pre class="example"><span class="keyword">for</span> _, e <span class="keyword">in</span> <span class="global">ipairs</span>(record:where(<span class="string">'creature'</span>, { toughness = <span class="number">0</span> })) <span class="keyword">do</span>
+  e:destroy()
+<span class="keyword">end</span>
+<span class="comment">-- If you only want to count, the returned table has a 'n' field for that
+</span><span class="keyword">if</span> record:where(<span class="string">'player'</span>, { life = <span class="number">0</span> }).n &gt; <span class="number">0</span> <span class="keyword">then</span>
+  <span class="global">print</span>(<span class="string">"Dead players detected!"</span>)
+<span class="keyword">end</span></pre>
+
+	</ul>
+
+
+	</dd>
+<div class="row" style="height:2em"></div>
+	<dt>
+	<a name = "Record:clear"></a>
+	<h3 class="text-primary">
+	Record:clear&nbsp;(e, name)
+	</h3>
+	</dt>
+	<dd>
+	Remove a property from the <a href="../classes/Entity.html#">Entity</a>.
+
+
+
+	<h4>Parameters:</h4>
+										<ul>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="../classes/Entity.html#">Entity</a>
+	</strong>
+	e</kbd>
+	<p>
+ The entity losing a property
+	</p>
+	</li>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>
+	</strong>
+	name</kbd>
+	<p>
+ The name of the removed property
+	</p>
+	</li>
+	</ul>
+
+
+	<h4>Usage:</h4>
+	<ul>
+
+	<pre class="example">record:clear(e, <span class="string">'flying'</span>)
+<span class="global">assert</span>(<span class="keyword">not</span> record:is(e, <span class="string">'flying'</span>)</pre>
+
+	</ul>
+
+
+	</dd>
+<div class="row" style="height:2em"></div>
+	<dt>
+	<a name = "Record:clear_all"></a>
+	<h3 class="text-primary">
+	Record:clear_all&nbsp;(e)
+	</h3>
+	</dt>
+	<dd>
+	Remove all properties from the <a href="../classes/Entity.html#">Entity</a>.
+  This is normally done when you will no longer use an entity. Do not
+  recycle entities.
+
+	<h4>Parameters:</h4>
+										<ul>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="../classes/Entity.html#">Entity</a>
+	</strong>
+	e</kbd>
+	<p>
+ The entity losing all its properties
+	</p>
+	</li>
+	</ul>
+
+
+	<h4>Usage:</h4>
+	<ul>
+
+	<pre class="example">record:clear_all(e)
+<span class="global">assert</span>(<span class="keyword">not</span> record:is(e, <span class="string">'flying'</span>)
+<span class="global">assert</span>(<span class="keyword">not</span> record:is(e, <span class="string">'creature'</span>)
+<span class="comment">-- etc.</span></pre>
+
+	</ul>
+
+
+	</dd>
+<div class="row" style="height:2em"></div>
+	</dl>
+
+
+	</div> <!-- id="content" -->
+	</div> <!-- id="main" -->
+	<div id="about">
+	</div> <!-- id="about" -->
+	</div>
+	<div class="col-xs-0 col-md-2 col-lg-3"></div>
+	</div> <!-- content row -->
+	</div> <!-- class="container" -->
+	</body>
+	</html>

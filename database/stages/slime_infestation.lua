@@ -7,7 +7,7 @@ return {
     { blue_slime = 0, green_slime = 0 },
   },
   landscape ={
-    {'tree', 3 },
+    {{type = 'rock', num = 20}, {type = 'tree', num = 13}},
     {'tree', 4 },
     {'tree', 5 },
     }

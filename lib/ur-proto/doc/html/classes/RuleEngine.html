@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Unlimited Rulebook Prototype's reference</title>
+<link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script
+src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+</script>
+<link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+<div class="row">
+<div class="col-xs-0 col-md-1 col-lg-2"></div>
+<div class="col-xs-12 col-md-10 col-lg-8">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse"
+data-target="#luxNavbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="../index.html">
+Unlimited Rulebook Prototype
+</a>
+</div>
+<div class="collapse navbar-collapse" id="luxNavbar">
+<ul class="nav navbar-nav">
+<li class="dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown"
+	href="#">
+Topics
+	<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu">
+	<li
+	>
+	<a href="../topics/Manual.md.html">
+Manual
+	</a>
+	</li>
+	<li
+	>
+	<a href="../topics/Architecture.md.html">
+Architecture
+	</a>
+	</li>
+	</ul>
+	</li>
+<li class="dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown"
+	href="#">
+Classes
+	<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu">
+	<li
+	class="active">
+	<a href="../classes/RuleEngine.html">
+RuleEngine
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/Entity.html">
+Entity
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/Record.html">
+Record
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/RuleSet.html">
+RuleSet
+	</a>
+	</li>
+	</ul>
+	</li>
+	</ul>
+	<ul class="nav navbar-nav navbar-right">
+	<li>
+	<a href="https://gitlab.com/unlimited-rulebook/ur-proto">
+	GitLab Page
+	</a>
+	</li>
+	</ul>
+	</div>
+	</div>
+	<div class="col-xs-0 col-md-1 col-lg-2"></div>
+	</div>
+	</div>
+	</nav>
+
+	<div class="container-fluid">
+
+
+	<div class="row">
+	<div class="col-xs-0 col-md-2 col-lg-3"></div>
+	<div class="col-xs-12 col-md-8 col-lg-6">
+	<div id="main">
+
+
+	<!-- Menu -->
+
+
+
+	<div id="content">
+
+
+	<h1>
+RuleEngine
+	<small>class</small>
+	</h1>
+
+<div class="row" style="height:2em"></div>
+
+	<p>
+	The economy mechanics rule simulation engine.
+  Any method you try to call on objects of this class will result in an
+  attempt to invoke a rule of the same name.
+	</p>
+
+
+
+	<h4>Usage:</h4>
+	<ul>
+	<pre class="example"><span class="keyword">local</span> RuleEngine = <span class="global">require</span> <span class="string">'ur-proto'</span>
+
+<span class="comment">-- Use Lua's module path notation!
+</span><span class="keyword">local</span> MODULE_PATHS = { <span class="string">'my_game.rules'</span>, <span class="string">'some_extension.rules'</span> }
+<span class="comment">-- Remember: the order is important!
+</span><span class="keyword">local</span> RULESETS = { <span class="string">'character'</span>, <span class="string">'item'</span>, <span class="string">'inventory'</span> }
+
+<span class="keyword">local</span> engine = RuleEngine(MODULE_PATHS, RULESETS)
+
+<span class="comment">-- Tries to invoke rule "give_item" with the given parameters.
+</span>engine:give_item(some_character, some_item)</pre>
+	</ul>
+
+
+	<h2>
+	<a name="Methods"></a>
+Methods
+	</h2>
+
+	<dl class="function">
+	<dt>
+	<a name = "RuleEngine:_init"></a>
+	<h3 class="text-primary">
+	RuleEngine:_init&nbsp;(paths, rulesets)
+	</h3>
+	</dt>
+	<dd>
+	Class constructor.
+  Note that rulesets are loaded following the given order, and their scripts
+  are sought following the paths also in the given order. Rule order is
+  important for conflict resolution, so pay attention!
+
+	<h4>Parameters:</h4>
+										<ul>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a>
+	</strong>
+	paths</kbd>
+	<p>
+ list of paths where ruleset scripts will be loaded from
+	</p>
+	</li>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a>
+	</strong>
+	rulesets</kbd>
+	<p>
+ list of ruleset names to load, in order
+	</p>
+	</li>
+	</ul>
+
+
+
+
+	</dd>
+<div class="row" style="height:2em"></div>
+	</dl>
+
+	<h2>
+	<a name="Metamethods"></a>
+Metamethods
+	</h2>
+
+	<dl class="function">
+	<dt>
+	<a name = "RuleEngine:__index"></a>
+	<h3 class="text-primary">
+	RuleEngine:__index&nbsp;(key)
+	</h3>
+	</dt>
+	<dd>
+	Forwards method calls as rule invocations.
+  Field access works normally.
+
+	<h4>Parameters:</h4>
+										<ul>
+	<li>
+	<kbd>
+	<strong class="text-type">
+<a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>
+	</strong>
+	key</kbd>
+	<p>
+ the rule name
+	</p>
+	</li>
+	</ul>
+
+	<h4>Returns:</h4>
+	<ol>
+
+	<kbd><strong class="text-type">
+	<span class="type">function</span></strong></kbd>
+	<p>
+a wrapper that invokes the corresponding rule
+	</p>
+
+	</ol>
+
+
+
+	</dd>
+<div class="row" style="height:2em"></div>
+	</dl>
+
+
+	</div> <!-- id="content" -->
+	</div> <!-- id="main" -->
+	<div id="about">
+	</div> <!-- id="about" -->
+	</div>
+	<div class="col-xs-0 col-md-2 col-lg-3"></div>
+	</div> <!-- content row -->
+	</div> <!-- class="container" -->
+	</body>
+	</html>

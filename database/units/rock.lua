@@ -1,13 +1,14 @@
 --
 -- Created by IntelliJ IDEA.
 -- User: alexandre
--- Date: 20/11/2019
--- Time: 12:22
+-- Date: 22/11/2019
+-- Time: 10:30
 -- To change this template use File | Settings | File Templates.
 --
+
 return {
-    name = "tree",
+    name = "rock",
     max_hp = 0,
-    appearance = 'tree'
+    appearance = 'rock'
 }
 

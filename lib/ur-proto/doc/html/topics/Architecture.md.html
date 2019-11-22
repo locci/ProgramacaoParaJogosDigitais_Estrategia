@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Unlimited Rulebook Prototype's reference</title>
+<link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script
+src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+</script>
+<link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+<div class="row">
+<div class="col-xs-0 col-md-1 col-lg-2"></div>
+<div class="col-xs-12 col-md-10 col-lg-8">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse"
+data-target="#luxNavbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="../index.html">
+Unlimited Rulebook Prototype
+</a>
+</div>
+<div class="collapse navbar-collapse" id="luxNavbar">
+<ul class="nav navbar-nav">
+<li class="dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown"
+	href="#">
+Topics
+	<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu">
+	<li
+	>
+	<a href="../topics/Manual.md.html">
+Manual
+	</a>
+	</li>
+	<li
+	class="active">
+	<a href="../topics/Architecture.md.html">
+Architecture
+	</a>
+	</li>
+	</ul>
+	</li>
+<li class="dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown"
+	href="#">
+Classes
+	<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu">
+	<li
+	>
+	<a href="../classes/RuleEngine.html">
+RuleEngine
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/Entity.html">
+Entity
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/Record.html">
+Record
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/RuleSet.html">
+RuleSet
+	</a>
+	</li>
+	</ul>
+	</li>
+	</ul>
+	<ul class="nav navbar-nav navbar-right">
+	<li>
+	<a href="https://gitlab.com/unlimited-rulebook/ur-proto">
+	GitLab Page
+	</a>
+	</li>
+	</ul>
+	</div>
+	</div>
+	<div class="col-xs-0 col-md-1 col-lg-2"></div>
+	</div>
+	</div>
+	</nav>
+
+	<div class="container-fluid">
+
+
+	<div class="row">
+	<div class="col-xs-0 col-md-2 col-lg-3"></div>
+	<div class="col-xs-12 col-md-8 col-lg-6">
+	<div id="main">
+
+
+	<!-- Menu -->
+
+
+
+	<div id="content">
+
+<h1>The Unlimited Rulebook architecture</h1>
+
+
+<p><img src="ClassDiagram.png" style="width:100%;"></p>
+
+
+<p>The central design of the Unlimited Rulebook architecture is to encapsulate
+access to the game&rsquo;s economy simulation state behind a rule engine. Code outside
+the engine can only access the state through the invocation of <strong>rules</strong>. By
+doing so, we guarantee that the dynamic behavior of rules is always executed
+correctly, since the engine always adjudicates the invocation.</p>
+
+<p><a name="The_simulation_state"></a></p>
+
+<h2>The simulation state</h2>
+
+<p>The economy simulation state of the game is kept in a <a href="../classes/Record.html#">Record</a> instance, which
+follows a property-centric design for entities in the simulation (or a pure
+entity-component pattern, if you prefer). It associates properties to <a href="../classes/Entity.html#">Entity</a>
+objects, and the sum of all properties determines the capabilities of a
+given entity at runtime. Properties are just plain data tables, where the keys
+are <strong>property field names</strong> and the values are any Lua type. An entity can only
+have one of each property. See the <a href="../classes/Record.html#">Record</a> class reference for API details.
+Be careful: properties are only shallow-copied.</p>
+
+<p>As explained above, you cannot access the record from outside the engine. Only
+rules can. If you want to read or write to the record, you need to use an
+existing rule or define a new one.</p>
+
+<p><a name="Rules"></a></p>
+
+<h2>Rules</h2>
+
+<p>A rule works much like a function: it has a name and a signature. You can invoke
+it, pass parameters to it, and collect whatever results it returns. The
+difference is how you define its behavior. A rule has one or more <strong>cases</strong>. You
+implement each case separately and the <a href="../classes/RuleEngine.html#">RuleEngine</a> assures that the correct
+ones will be called when you invoke a rule.</p>
+
+
+
+	</div> <!-- id="content" -->
+	</div> <!-- id="main" -->
+	<div id="about">
+	</div> <!-- id="about" -->
+	</div>
+	<div class="col-xs-0 col-md-2 col-lg-3"></div>
+	</div> <!-- content row -->
+	</div> <!-- class="container" -->
+	</body>
+	</html>

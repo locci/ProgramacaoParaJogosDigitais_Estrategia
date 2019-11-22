@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Unlimited Rulebook Prototype's reference</title>
+<link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script
+src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+</script>
+<link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+<div class="row">
+<div class="col-xs-0 col-md-1 col-lg-2"></div>
+<div class="col-xs-12 col-md-10 col-lg-8">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse"
+data-target="#luxNavbar">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="../index.html">
+Unlimited Rulebook Prototype
+</a>
+</div>
+<div class="collapse navbar-collapse" id="luxNavbar">
+<ul class="nav navbar-nav">
+<li class="dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown"
+	href="#">
+Topics
+	<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu">
+	<li
+	class="active">
+	<a href="../topics/Manual.md.html">
+Manual
+	</a>
+	</li>
+	<li
+	>
+	<a href="../topics/Architecture.md.html">
+Architecture
+	</a>
+	</li>
+	</ul>
+	</li>
+<li class="dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown"
+	href="#">
+Classes
+	<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu">
+	<li
+	>
+	<a href="../classes/RuleEngine.html">
+RuleEngine
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/Entity.html">
+Entity
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/Record.html">
+Record
+	</a>
+	</li>
+	<li
+	>
+	<a href="../classes/RuleSet.html">
+RuleSet
+	</a>
+	</li>
+	</ul>
+	</li>
+	</ul>
+	<ul class="nav navbar-nav navbar-right">
+	<li>
+	<a href="https://gitlab.com/unlimited-rulebook/ur-proto">
+	GitLab Page
+	</a>
+	</li>
+	</ul>
+	</div>
+	</div>
+	<div class="col-xs-0 col-md-1 col-lg-2"></div>
+	</div>
+	</div>
+	</nav>
+
+	<div class="container-fluid">
+
+
+	<div class="row">
+	<div class="col-xs-0 col-md-2 col-lg-3"></div>
+	<div class="col-xs-12 col-md-8 col-lg-6">
+	<div id="main">
+
+
+	<!-- Menu -->
+
+
+
+	<div id="content">
+
+<h1>Manual</h1>
+
+
+<p>If you have any questions, don&rsquo;t hesitate to ask on the
+<a href="https://paca.ime.usp.br">PACA boards</a> or <a href="https://gitlab.com/unlimited-rulebook/ur-proto/issues">open an
+issue</a>.</p>
+
+<p><a name="Installation"></a></p>
+
+<h2>Installation</h2>
+
+<p>Download, clone or submodule <a href="https://gitlab.com/unlimited-rulebook/ur-proto">the source
+code</a> in a <code>lib/</code> folder in the
+root of your project. It should look more or less like this:</p>
+
+<pre><code> project/
+   assets/
+   common/
+   database/
+   lib/
+     ur-proto/ &lt;-- place it here
+   model/
+   state/
+   view/
+   conf.lua
+   main.lua
+   stack.lua
+</code></pre>
+
+<p>After this, add the following lines to your <code>love.load()</code>:</p>
+
+<pre>
+<span class="keyword">local</span> path = love.filesystem.getRequirePath()
+love.filesystem.setRequirePath(<span class="string">"lib/?.lua;lib/?/init.lua;"</span> .. path)
+</pre>
+
+
+<p><a name="Usage"></a></p>
+
+<h2>Usage</h2>
+
+<p>After following the steps above, you can import the unlimited rulebook&rsquo;s
+<a href="../classes/RuleEngine.html#">RuleEngine</a> class with:</p>
+
+<pre>
+<span class="keyword">local</span> RuleEngine = <span class="global">require</span> <span class="string">'ur-proto'</span>
+</pre>
+
+
+<p>Whenever the game starts a new economy simulation scenario (a new quest, a new
+stage, etc.), create an instance of the <a href="../classes/RuleEngine.html#">RuleEngine</a> class feeding it the
+appropriate rule set paths (see its constructor reference for details).</p>
+
+<p>Every method call on a <a href="../classes/RuleEngine.html#">RuleEngine</a> object is treated as a rule invocation.
+Ideally, some of the rules you make will create economy entities in the
+simulation and return them (e.g. a <code>engine:create_character()</code> rule). Method
+calls on entities are also forwarded as rule invocations, except they implicitly
+pass the entity as the first parameter to the rule:</p>
+
+<pre>
+<span class="keyword">local</span> engine = RuleEngine(<span class="comment">--[[ ruleset paths ]]</span>)
+
+<span class="comment">-- Invokes rule "create_character" with argument "bob"
+</span><span class="keyword">local</span> some_character = engine:create_character(<span class="string">"bob"</span>)
+
+<span class="comment">-- Invokes rule "gain_exp" with arguments (some_character, "bob")
+</span>some_character:gain_exp(<span class="number">15</span>)
+</pre>
+
+
+<p>See the <a href="../classes/RuleSet.html#">RuleSet</a> reference for details on how to define rules.</p>
+
+
+
+	</div> <!-- id="content" -->
+	</div> <!-- id="main" -->
+	<div id="about">
+	</div> <!-- id="about" -->
+	</div>
+	<div class="col-xs-0 col-md-2 col-lg-3"></div>
+	</div> <!-- content row -->
+	</div> <!-- class="container" -->
+	</body>
+	</html>
