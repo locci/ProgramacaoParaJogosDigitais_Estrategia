@@ -8,6 +8,9 @@ function BattleField:_init()
   local center = Vec(1, 1) * h / 2
   local size = Vec(1, 1) * 32 * 8
   self.bounds = Box.from_vec(center, size)
+  center = Vec(10, 2.8) * h / 9
+  size = Vec(5, 6) * 16
+  self.menu_bounds = Box.from_vec(center, size)
 end
 
 function BattleField:center()
@@ -33,6 +36,7 @@ function BattleField:draw()
   g.setColor(1, 1, 1)
   g.setLineWidth(4)
   g.rectangle('line', self.bounds:get_rectangle())
+  g.rectangle('line', self.menu_bounds:get_rectangle())
 end
 
 return BattleField

@@ -45,6 +45,10 @@ return {
     rock = {
       frame = { 5, 2 },
       color = 'gray'
+    },
+    heart = {
+      frame = { 19, 27 },
+      color = 'red'
     }
   }
 }

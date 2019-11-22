@@ -77,11 +77,23 @@ function PlayStageState:_load_Landscape(battlefield, landscape)
   end
 end
 
+function PlayStageState:_create_unit_at(specname, pos)
+  local unit = Unit(specname)
+  self.atlas:add(unit, pos, unit:get_appearance())
+  return unit
+end
+
 function PlayStageState:_load_units()
   local pos = self.battlefield:tile_to_screen(0, 0)--mudar para o centro
   self.units = {}
   -- Parametrizar a cidade desenhada
   self:_create_unit_at('capital', pos)
+  local x = 9 local y = 2 local numheart = 4 local type = 'heart'
+  for i=1, numheart do
+    pos = self.battlefield:tile_to_screen(x, y)
+    self:_create_unit_at(type, pos)
+    x = x + 1
+  end
   local landscape = self.stage.landscape[1]
   self:_load_Landscape(self.battlefield, landscape)
   self.wave = Wave(self.stage.waves[1])
@@ -89,11 +101,6 @@ function PlayStageState:_load_units()
   self.monsters = {}
 end
 
-function PlayStageState:_create_unit_at(specname, pos)
-  local unit = Unit(specname)
-  self.atlas:add(unit, pos, unit:get_appearance())
-  return unit
-end
 
 function PlayStageState:on_mousepressed(_, _, button)
   local name
