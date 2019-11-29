@@ -19,5 +19,9 @@ function Unit:get_hp()
   return self.hp, self.spec.max_hp
 end
 
+function Unit:set_color(color)
+  self.spec.color = color
+end
+
 return Unit
 

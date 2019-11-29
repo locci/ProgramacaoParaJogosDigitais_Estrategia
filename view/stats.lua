@@ -13,7 +13,7 @@ function Stats:draw()
   g.setFont(self.font)
   g.setColor(1, 1, 1)
   g.translate(self.position:get())
-  g.print(("Gild %d"):format(1000))
+  g.print(("Gold %d"):format(1000))
   g.translate(0, self.font:getHeight())
   g.pop()
 end

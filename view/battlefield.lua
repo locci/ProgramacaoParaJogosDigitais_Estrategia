@@ -2,6 +2,7 @@
 local Box = require 'common.box'
 local Vec = require 'common.vec'
 local BattleField = require 'common.class' ()
+---local Playstage = require 'play_stage'
 
 function BattleField:_init()
   local h = love.graphics.getHeight()
@@ -22,13 +23,17 @@ function BattleField:round_to_tile(pos)
   local center = self:center()
   local dist = pos - center
   local tile = ((dist + Vec(16, 16)) / 32):floor()
-  tile:clamp(7, 7)
   return center + tile * 32
 end
 
 function BattleField:tile_to_screen(x, y)
   local center = self:center()
   return center + Vec(x, y):floor() * 32
+end
+
+function BattleField:tile_to_screen_move(x, y)
+  local center = self:center()
+  return center + Vec(x, y):floor() * 4
 end
 
 function BattleField:draw()

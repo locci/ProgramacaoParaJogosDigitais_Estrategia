@@ -49,6 +49,14 @@ return {
     heart = {
       frame = { 19, 27 },
       color = 'red'
+    },
+    blanck = {
+      frame = { 0, 0 },
+      color = 'red'
+    },
+    kill = {
+       frame = { 23, 27 },
+       color = 'red'
     }
   }
 }
