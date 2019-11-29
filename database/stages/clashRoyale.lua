@@ -6,7 +6,5 @@ return {
   },
   landscape ={
     {{type = 'rock', num = 5}, {type = 'tree', num = 13}},
-    {'tree', 4 },
-    {'tree', 5 },
   }
 }

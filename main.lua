@@ -17,7 +17,7 @@ function love.load()
   _stack:push('choose_stage')
   _G.landscape = {}
   table.insert(_G.landscape, castlePos)
-
+  _G.heart = {}
   end
 
 
