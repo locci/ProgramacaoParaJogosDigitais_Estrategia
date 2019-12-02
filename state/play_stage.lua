@@ -9,6 +9,8 @@ local Stats = require 'view.stats'
 local State = require 'state'
 local Chosestartmonstercoord = require 'state.chose_start_monster_coord'
 local CheckKill = require 'state.check_kill'
+local BuidWaves = require 'model.build_waves'
+local COLLISION = require 'state.collision'
 
 local PlayStageState = require 'common.class' (State)
 
@@ -142,31 +144,35 @@ function PlayStageState:update(dt)
 
   local x = 0 local y = 0
   self.wave:update(dt)
-  local tab = {}
   --local rand = love.math.random
   local pending = self.wave:poll()
   while pending > 0 do --calcular o caminho
   if stop then
     stop = false
       math.randomseed(os.time())
-      local vel = 0
+      local vel  = 0
       local cont = 1
-
-      --[[local waves = self.stage.waves
-      print(waves[1].blue_slime)
-      for i, j in ipairs(waves) do
-        print(i, #j)
-      end]]
-
-      while cont <= 10 do --calcular o caminho/inserir numero correto de monstros
-        x, y = Chosestartmonstercoord.origen_coord(x, y)
-        local pos = self.battlefield:tile_to_screen(x, y)
-        -- Parametrizar o monstro a ser posto na tela
-        local monster = self:_create_unit_at('blue_slime', pos)
-        vel = math.random(5, 15)
-        table.insert(monster, {pos, vel, cont})
-        self.monsters[monster] = true
-        table.insert(myMonsters , monster)
+      local waves = self.stage.waves
+      local aux = BuidWaves:build_wave(waves)
+      local type
+      local num = 0
+      local cont_monster = 0
+      local tab = {}
+      while cont <= #aux do --calcular o caminho/inserir numero correto de monstros
+         tab = aux[cont]
+         type = tab[1]
+         num = tab[2]
+         while cont_monster < num do
+            x, y = Chosestartmonstercoord.origen_coord(x, y)
+            local pos = self.battlefield:tile_to_screen(x, y)
+            local monster = self:_create_unit_at(type, pos)
+            vel = math.random(5, 15)
+            table.insert(monster, {pos, vel, cont})
+            self.monsters[monster] = true
+            table.insert(myMonsters , monster)
+            cont_monster = cont_monster + 1
+          end
+        cont_monster = 0
         cont = cont + 1
       end
   end
@@ -183,6 +189,8 @@ function PlayStageState:update(dt)
       aux = monster[1]
       local pos = aux[1]
       local sprite_instance = self.atlas:get(monster)
+      --verifico colisoes com os ostaculos
+      if COLLISION:checkCollision(pos['x'], pos['y']) then
       if pos['x'] > 300 then
         pos['x'] = pos['x'] - 1
         coorX = -1
@@ -198,7 +206,15 @@ function PlayStageState:update(dt)
         coorY = -1
       end
       sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
-      --
+      else
+         --[[math.randomseed(os.time())
+          local numX = math.random(100)
+          local numY = math.random(100)
+          if numX >= 50 then coorX = 1 else coorX = -1 end
+          if numX < 50 then coorY = 1 else coorY = -1 end]]
+          sprite_instance.position:add(Vec(0, 0)  * aux[2] * dt)
+      end
+      --@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
       if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
         hit = hit + 1
         if CheckKill:check_kill(hit) then

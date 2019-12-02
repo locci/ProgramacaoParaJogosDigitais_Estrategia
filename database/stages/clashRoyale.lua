@@ -2,7 +2,7 @@
 return {
   title = 'Clash Royale',
   waves = {
-    { knight = 1 },
+     {{'warrior', 12}},
   },
   landscape ={
     {{type = 'rock', num = 5}, {type = 'tree', num = 13}},
