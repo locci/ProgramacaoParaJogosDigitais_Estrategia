@@ -9,7 +9,7 @@ local Stats = require 'view.stats'
 local State = require 'state'
 local Chosestartmonstercoord = require 'state.chose_start_monster_coord'
 local CheckKill = require 'state.check_kill'
-local BuidWaves = require 'model.build_waves'
+local BuildWaves = require 'model.build_waves'
 local COLLISION = require 'state.collision'
 
 local PlayStageState = require 'common.class' (State)
@@ -124,7 +124,14 @@ function PlayStageState:on_mousepressed(_, _, button)
   if button ~= 1 then name = 'warrior'
   else name = 'archer' end
   -- Parametrizar o heroi a ser posto na tela
-  self:_create_unit_at(name, Vec(self.cursor:get_position()))
+  local cursorPositionVector = Vec(self.cursor:get_position())
+  local x = cursorPositionVector.x
+  local y = cursorPositionVector.y
+  local b = self.battlefield.bounds
+
+  if (b.left <= x and x <= b.right) and (b.top <= y and y <= b.bottom) then
+    self:_create_unit_at(name, cursorPositionVector)
+  end
 end
 
 function sleep(s)
@@ -153,7 +160,7 @@ function PlayStageState:update(dt)
       local vel  = 0
       local cont = 1
       local waves = self.stage.waves
-      local aux = BuidWaves:build_wave(waves)
+      local aux = BuildWaves:build_wave(waves)
       local type
       local num = 0
       local cont_monster = 0
