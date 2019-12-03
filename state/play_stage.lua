@@ -129,7 +129,7 @@ function PlayStageState:on_mousepressed(_, _, button)
   local y = cursorPositionVector.y
   local b = self.battlefield.bounds
 
-  if (b.left <= x and x <= b.right) and (b.top <= y and y <= b.bottom) then
+  if (b.left <= x - 32 and x <= b.right - 32) and (b.top <= y - 32 and y <= b.bottom - 32) then
     self:_create_unit_at(name, cursorPositionVector)
   end
 end
