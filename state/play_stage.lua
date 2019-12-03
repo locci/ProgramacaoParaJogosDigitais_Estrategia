@@ -22,7 +22,8 @@ function PlayStageState:_init(stack)
   self.battlefield = nil
   self.units = nil
   self.wave = nil
-  self.stats = nil
+  self.gold = nil
+  self.lives = nil
   self.monsters = nil
 end
 
@@ -36,7 +37,8 @@ function PlayStageState:leave()
   self:view('bg'):remove('battlefield')
   self:view('fg'):remove('atlas')
   self:view('bg'):remove('cursor')
-  self:view('hud'):remove('stats')
+  self:view('hud'):remove('gold')
+  self:view('hud'):remove('lives')
 end
 
 function PlayStageState:_load_view()
@@ -44,11 +46,13 @@ function PlayStageState:_load_view()
   self.atlas = SpriteAtlas()
   self.cursor = Cursor(self.battlefield)
   local _, right, top, _ = self.battlefield.bounds:get()
-  self.stats = Stats(Vec(right + 16, top))
+  self.gold = Stats(Vec(right + 16, top), "Gold ", 1000)
+  self.lives = Stats(Vec(610, 346), "x", 10)
   self:view('bg'):add('battlefield', self.battlefield)
   self:view('fg'):add('atlas', self.atlas)
   self:view('bg'):add('cursor', self.cursor)
-  self:view('hud'):add('stats', self.stats)
+  self:view('hud'):add('gold', self.gold)
+  self:view('hud'):add('lives', self.lives)
 end
 
 local check_position = function(x, y)
@@ -70,7 +74,8 @@ function PlayStageState:_load_Landscape(battlefield, landscape)
         local x = math.random(worldSize[1],worldSize[2])
         local y = math.random(worldSize[1],worldSize[2])
         if check_position(x, y) then
-          table.insert(tab,x)  table.insert(tab,y)
+          table.insert(tab,x)
+          table.insert(tab,y)
           table.insert(_G.landscape,tab)
           tab = {}
           local pos = battlefield:tile_to_screen(x, y)
@@ -98,13 +103,9 @@ function PlayStageState:_load_units()
   self.units = {}
   -- Parametrizar a cidade desenhada
   self:_create_unit_at('capital', pos)
-  local x = 9 local y = 2 local numheart = 4 local type = 'heart'
-  for i=1, numheart do
-    pos = self.battlefield:tile_to_screen(x, y)
-    self:_create_unit_at(type, pos)
-    table.insert(_G.heart, pos)
-    x = x + 1
-  end
+  pos = self.battlefield:tile_to_screen(9, 2)
+  self:_create_unit_at('heart', pos)
+  table.insert(_G.heart, pos)
 
   pos = self.battlefield:tile_to_screen(10, -5)
   self:_create_unit_at('archer', pos)
@@ -129,8 +130,17 @@ function PlayStageState:on_mousepressed(_, _, button)
   local y = cursorPositionVector.y
   local b = self.battlefield.bounds
 
+  -- cursor esta dentro do campo de batalha
   if (b.left <= x - 32 and x <= b.right - 32) and (b.top <= y - 32 and y <= b.bottom - 32) then
     self:_create_unit_at(name, cursorPositionVector)
+    self.gold.quantity = self.gold.quantity - 100
+  end
+
+  local menu = self.battlefield.menu_bounds
+  -- cursor esta dentro do menu de selecao de personagens
+  if (menu.left <= x and x <= menu.right) and (menu.top <= y and y <= menu.bottom) then
+    local selectableUnitPosition = self.battlefield:round_to_tile(cursorPositionVector)
+    print(selectableUnitPosition)
   end
 end
 
@@ -225,12 +235,9 @@ function PlayStageState:update(dt)
       if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
         hit = hit + 1
         if CheckKill:check_kill(hit) then
-          if  _G.heart[heartCont] ~= nill then
-            self:_create_unit_at('kill', _G.heart[heartCont])
-          end
-          if heartCont < #_G.heart then heartCont = heartCont + 1
-          else
-            local gameover = true
+          self.lives.quantity = self.lives.quantity - 1
+          if self.lives.quantity == 0 then
+            gameover = true
           end
           --sleep(dt*5)
         end
