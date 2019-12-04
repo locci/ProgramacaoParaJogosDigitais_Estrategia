@@ -11,6 +11,7 @@ local Chosestartmonstercoord = require 'state.chose_start_monster_coord'
 local CheckKill = require 'state.check_kill'
 local BuildWaves = require 'model.build_waves'
 local COLLISION = require 'state.collision'
+local Indexer = require 'database.indexer'
 
 local PlayStageState = require 'common.class' (State)
 
@@ -65,14 +66,15 @@ local check_position = function(x, y)
 end
 
 function PlayStageState:_load_Landscape(battlefield, landscape)
-  local worldSize = {-6,6}  math.randomseed(os.time())-- mundo 6x6 não preciso checar colisão na criação dos monstros.
+  local worldSize = {lower = -6, upper = 6}  math.randomseed(os.time())
+  -- mundo 6x6 não preciso checar colisão na criação dos monstros.
   for _, object in ipairs(landscape) do
       local unit = object['type']
       local length = object['num']
       local tab = {}
       for i=1, length do
-        local x = math.random(worldSize[1],worldSize[2])
-        local y = math.random(worldSize[1],worldSize[2])
+        local x = math.random(worldSize.lower,worldSize.upper)
+        local y = math.random(worldSize.lower,worldSize.upper)
         if check_position(x, y) then
           table.insert(tab,x)
           table.insert(tab,y)
@@ -98,6 +100,10 @@ function PlayStageState:_move_unit_at(monster, pos)
   return unit
 end
 
+local selected
+local unitsInMenu
+local unitsInField
+
 function PlayStageState:_load_units()
   local pos = self.battlefield:tile_to_screen(0, 0)--mudar para o centro
   self.units = {}
@@ -107,40 +113,66 @@ function PlayStageState:_load_units()
   self:_create_unit_at('heart', pos)
   table.insert(_G.heart, pos)
 
-  pos = self.battlefield:tile_to_screen(10, -5)
-  self:_create_unit_at('archer', pos)
+  selected = Unit("archer")
+  unitsInMenu = {}
+  unitsInField = {}
+  -- Ainda da pra melhorar (usar os limites do quadro de brodas brancas como referencia para a posicao)
+  herosMenu = require 'database.herosMenu'
+  for _, hero in ipairs(herosMenu) do
+    pos = self.battlefield:tile_to_screen(hero.pos:get())
+    -- criar objeto guerreiro
+    local index = Indexer.index(pos)
+    unitsInMenu[index] = hero.appearance
+    print("indexedPos", index)
+    print("name", unitsInMenu[index])
+    self:_create_unit_at(hero.appearance, pos)
+  end
 
   local landscape = self.stage.landscape[1]
   self:_load_Landscape(self.battlefield, landscape)
   self.wave = Wave(self.stage.waves[1])
   self.wave:start()
   self.monsters = {}
-
 end
 
-
 function PlayStageState:on_mousepressed(_, _, button)
-  local name
+  --local name
   print("on_mousepressed button=", button)
-  if button ~= 1 then name = 'warrior'
-  else name = 'archer' end
+  --[[if button ~= 1 then name = 'warrior'
+  else name = 'archer' end]]
+
   -- Parametrizar o heroi a ser posto na tela
-  local cursorPositionVector = Vec(self.cursor:get_position())
-  local x = cursorPositionVector.x
-  local y = cursorPositionVector.y
+  local cursor = Vec(self.cursor:get_position())
+  local x, y = cursor:get()
   local b = self.battlefield.bounds
+  local l, r, t, bot = b.left, b.right, b.top, b.bottom
 
   -- cursor esta dentro do campo de batalha
-  if (b.left <= x - 32 and x <= b.right - 32) and (b.top <= y - 32 and y <= b.bottom - 32) then
-    self:_create_unit_at(name, cursorPositionVector)
-    self.gold.quantity = self.gold.quantity - 100
+  if (l <= x - 32 and x <= r - 32) and (t <= y - 32 and y <= bot - 32) then
+    local index = Indexer.index(cursor)
+    if unitsInField[index] == nil then
+      unitsInField[index] = selected
+      self:_create_unit_at(selected:get_appearance(), cursor)
+      self.gold.quantity = self.gold.quantity - 100
+    end
+    --name = "archer"
+    --table.insert(units, Unit(hero.name))
   end
 
   local menu = self.battlefield.menu_bounds
   -- cursor esta dentro do menu de selecao de personagens
   if (menu.left <= x and x <= menu.right) and (menu.top <= y and y <= menu.bottom) then
-    local selectableUnitPosition = self.battlefield:round_to_tile(cursorPositionVector)
-    print(selectableUnitPosition)
+    print("cursor esta dentro do menu de selecao de personagens")
+    local pos = self.battlefield:pos_to_tile(cursor)
+    print("pos", pos)
+    print("unitsInMenu[pos]", unitsInMenu[pos])
+    local index = Indexer.index(pos)
+    -- pegar aqui o personagem selecionado
+    if unitsInMenu[index] ~= nil then
+      selected = Unit(unitsInMenu[index])
+      print("selected", selected)
+    end
+    print("selectableUnitPosition", selectableUnitPosition)
   end
 end
 
@@ -157,6 +189,27 @@ local stop = true
 local coorX = 0
 local coorY = 0
 
+
+local function go(posi, destinyX, destinyY)
+  local X
+  local Y
+        if posi['x'] > destinyX then
+        posi['x'] = posi['x'] - 1
+        X = -1
+      else
+        posi['x'] = posi['x'] + 1
+        X = 1
+      end
+      if posi['y'] > destinyY then
+         posi['y'] = posi['y'] - 1
+         Y = -1
+      else
+         posi['y'] = posi['y'] + 1
+         Y = 1
+      end
+  return X, Y, posi['x'], posi['y']
+end
+
 function PlayStageState:update(dt)
 
   local x = 0 local y = 0
@@ -164,36 +217,36 @@ function PlayStageState:update(dt)
   --local rand = love.math.random
   local pending = self.wave:poll()
   while pending > 0 do --calcular o caminho
-  if stop then
-    stop = false
-      math.randomseed(os.time())
-      local vel  = 0
-      local cont = 1
-      local waves = self.stage.waves
-      local aux = BuildWaves:build_wave(waves)
-      local type
-      local num = 0
-      local cont_monster = 0
-      local tab = {}
-      while cont <= #aux do --calcular o caminho/inserir numero correto de monstros
-         tab = aux[cont]
-         type = tab[1]
-         num = tab[2]
-         while cont_monster < num do
-            x, y = Chosestartmonstercoord.origen_coord(x, y)
-            local pos = self.battlefield:tile_to_screen(x, y)
-            local monster = self:_create_unit_at(type, pos)
-            vel = math.random(5, 15)
-            table.insert(monster, {pos, vel, cont_monster, true, true})
-            --self.monsters[monster] = true
-            table.insert(myMonsters , monster)
-            cont_monster = cont_monster + 1
-          end
-        cont_monster = 0
-        cont = cont + 1
-      end
-  end
-      pending = pending - 1
+    if stop then
+      stop = false
+        math.randomseed(os.time())
+        local vel  = 0
+        local cont = 1
+        local waves = self.stage.waves
+        local aux = BuildWaves:build_wave(waves)
+        local type
+        local num = 0
+        local cont_monster = 0
+        local tab = {}
+        while cont <= #aux do --calcular o caminho/inserir numero correto de monstros
+           tab = aux[cont]
+           type = tab[1]
+           num = tab[2]
+           while cont_monster < num do
+              x, y = Chosestartmonstercoord.origen_coord(x, y)
+              local pos = self.battlefield:tile_to_screen(x, y)
+              local monster = self:_create_unit_at(type, pos)
+              vel = math.random(5, 15)
+              table.insert(monster, {pos, vel, cont_monster, true, true})
+              --self.monsters[monster] = true
+              table.insert(myMonsters , monster)
+              cont_monster = cont_monster + 1
+            end
+          cont_monster = 0
+          cont = cont + 1
+        end
+    end
+    pending = pending - 1
   end
 
   tab = {}
@@ -202,60 +255,41 @@ function PlayStageState:update(dt)
   local num = 10
   local heartCont = 1
 
-  function go(posi, destinyX, destinyY)
-    local X
-    local Y
-          if posi['x'] > destinyX then
-          posi['x'] = posi['x'] - 1
-          X = -1
-        else
-          posi['x'] = posi['x'] + 1
-          X = 1
-        end
-        if posi['y'] > destinyY then
-           posi['y'] = posi['y'] - 1
-           Y = -1
-        else
-           posi['y'] = posi['y'] + 1
-           Y = 1
-        end
-    return X, Y, posi['x'], posi['y']
-  end
   local cont = 0
 
-for _, monster in ipairs(myMonsters) do--realizar o movimento
-    aux = monster[1]
-    local pos = aux[1]
-    local sprite_instance = self.atlas:get(monster)
-  --verifico colisoes com os ostaculos
-    if COLLISION:checkCollision(pos['x'], pos['y'])  then
-        coorX, coorY,  pos['x'], pos['y'] = go(pos, 300, 300)
-        sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
-    else
-        print('collision')
-        --aux[2] = aux[2] * 0.03
-        coorX, coorY,  pos['x'], pos['y'] = go(pos, pos['x'] + 1, pos['y'] + 1)
-        sprite_instance.position:add(Vec(coorX,coorY) * aux[2] * dt)
-    end
-    if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
-        hit = hit + 1
+  for _, monster in ipairs(myMonsters) do--realizar o movimento
+      aux = monster[1]
+      local pos = aux[1]
+      local sprite_instance = self.atlas:get(monster)
+    --verifico colisoes com os ostaculos
+      if COLLISION:checkCollision(pos['x'], pos['y'])  then
+          coorX, coorY,  pos['x'], pos['y'] = go(pos, 300, 300)
+          sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
+      else
+          print('collision')
+          --aux[2] = aux[2] * 0.03
+          coorX, coorY,  pos['x'], pos['y'] = go(pos, pos['x'] + 1, pos['y'] + 1)
+          sprite_instance.position:add(Vec(coorX,coorY) * aux[2] * dt)
+      end
+      if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
+          hit = hit + 1
 
-           if heartCont < #_G.heart then heartCont = heartCont + 1
-                sprite_instance.position:add(Vec(0, 0)  * 0 * dt)
-           else
-                _G.stop = false
-                local gameover = true
-           end
-        --end
-            --[[if hit == 10 then
-              while num > 0 do
-                table.remove(myMonsters, 1)
-                num = num - 1
-              end
-              hit = 11
-            end]]
-        end
-end
+             if heartCont < #_G.heart then heartCont = heartCont + 1
+                  sprite_instance.position:add(Vec(0, 0)  * 0 * dt)
+             else
+                  _G.stop = false
+                  local gameover = true
+             end
+          --end
+              --[[if hit == 10 then
+                while num > 0 do
+                  table.remove(myMonsters, 1)
+                  num = num - 1
+                end
+                hit = 11
+              end]]
+    end
+  end
 
 end
 

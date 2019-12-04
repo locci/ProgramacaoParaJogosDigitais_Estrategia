@@ -18,7 +18,7 @@ return {
       frame = { 29, 14 },
       color = 'gray'
     },
-    slime = {
+    green_slime = {
       frame = { 27, 8 },
       color = 'green'
     },
@@ -26,7 +26,7 @@ return {
       frame = { 27, 8 },
       color = 'blue'
     },
-    knight = {
+    warrior = {
       frame = { 28, 0 },
       color = 'blue'
     },
@@ -56,4 +56,3 @@ return {
     },
   }
 }
-
