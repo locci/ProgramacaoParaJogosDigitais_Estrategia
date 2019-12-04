@@ -1,6 +1,6 @@
 
 return {
-  title = 'Batle of Bastards',
+  title = 'Battle of Bastards',
   waves = {
     { archer = 1 },
   },
