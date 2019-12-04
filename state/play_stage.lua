@@ -234,27 +234,18 @@ for _, monster in ipairs(myMonsters) do--realizar o movimento
     else
         print('collision')
         --aux[2] = aux[2] * 0.03
-        coorX, coorY,  pos['x'], pos['y'] = go(pos, pos['x'] - 10, pos['y'] - 10)
-        sprite_instance.position:add(Vec(coorX,coorY) *aux[2] * dt)
+        coorX, coorY,  pos['x'], pos['y'] = go(pos, pos['x'] + 1, pos['y'] + 1)
+        sprite_instance.position:add(Vec(coorX,coorY) * aux[2] * dt)
     end
-    --@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
         hit = hit + 1
-        --if CheckKill:check_kill(hit) then
---<<<<<<< HEAD
+
            if heartCont < #_G.heart then heartCont = heartCont + 1
                 sprite_instance.position:add(Vec(0, 0)  * 0 * dt)
            else
                 _G.stop = false
                 local gameover = true
            end
---=======
-         -- self.lives.quantity = self.lives.quantity - 1
-         -- if self.lives.quantity == 0 then
-         --   gameover = true
-         -- end
-
--->>>>>>> 9aa9240e43cca0ab823800dea9fa14f61b6a3e8e
         --end
             --[[if hit == 10 then
               while num > 0 do
