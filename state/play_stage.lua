@@ -167,8 +167,8 @@ function PlayStageState:update(dt)
             local pos = self.battlefield:tile_to_screen(x, y)
             local monster = self:_create_unit_at(type, pos)
             vel = math.random(5, 15)
-            table.insert(monster, {pos, vel, cont})
-            self.monsters[monster] = true
+            table.insert(monster, {pos, vel, cont_monster, true, true})
+            --self.monsters[monster] = true
             table.insert(myMonsters , monster)
             cont_monster = cont_monster + 1
           end
@@ -185,57 +185,66 @@ function PlayStageState:update(dt)
   local num = 10
   local heartCont = 1
 
-  for _,monster in ipairs(myMonsters) do--realizar o movimento
-      aux = monster[1]
-      local pos = aux[1]
-      local sprite_instance = self.atlas:get(monster)
-      --verifico colisoes com os ostaculos
-      if COLLISION:checkCollision(pos['x'], pos['y']) then
-      if pos['x'] > 300 then
-        pos['x'] = pos['x'] - 1
-        coorX = -1
-      else
-        pos['x'] = pos['x'] + 1
-        coorX = -1
-      end
-      if pos['y'] > 300 then
-        pos['y'] = pos['y'] - 1
-        coorY = -1
-      else
-        pos['y'] = pos['y'] + 1
-        coorY = -1
-      end
-      sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
-      else
-         --[[math.randomseed(os.time())
-          local numX = math.random(100)
-          local numY = math.random(100)
-          if numX >= 50 then coorX = 1 else coorX = -1 end
-          if numX < 50 then coorY = 1 else coorY = -1 end]]
-          sprite_instance.position:add(Vec(0, 0)  * aux[2] * dt)
-      end
-      --@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-      if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
+  function go(posi, destinyX, destinyY)
+    local X
+    local Y
+          if posi['x'] > destinyX then
+          posi['x'] = posi['x'] - 1
+          X = -1
+        else
+          posi['x'] = posi['x'] + 1
+          X = 1
+        end
+        if posi['y'] > destinyY then
+           posi['y'] = posi['y'] - 1
+           Y = -1
+        else
+           posi['y'] = posi['y'] + 1
+           Y = 1
+        end
+    return X, Y, posi['x'], posi['y']
+  end
+  local cont = 0
+
+for _, monster in ipairs(myMonsters) do--realizar o movimento
+    aux = monster[1]
+    local pos = aux[1]
+    local sprite_instance = self.atlas:get(monster)
+  --verifico colisoes com os ostaculos
+    if COLLISION:checkCollision(pos['x'], pos['y'])  then
+        coorX, coorY,  pos['x'], pos['y'] = go(pos, 300, 300)
+        sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
+    else
+        print('collision')
+        --aux[2] = aux[2] * 0.03
+        coorX, coorY,  pos['x'], pos['y'] = go(pos, pos['x'] - 10, pos['y'] - 10)
+        sprite_instance.position:add(Vec(coorX,coorY) *aux[2] * dt)
+    end
+    --@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
         hit = hit + 1
         if CheckKill:check_kill(hit) then
-          if  _G.heart[heartCont] ~= nill then
-            self:_create_unit_at('kill', _G.heart[heartCont])
-          end
-          if heartCont < #_G.heart then heartCont = heartCont + 1
-          else
-            local gameover = true
-          end
-          --sleep(dt*5)
+           if  _G.heart[heartCont] ~= nill then
+                self:_create_unit_at('kill', _G.heart[heartCont])
+           end
+           if heartCont < #_G.heart then heartCont = heartCont + 1
+                sprite_instance.position:add(Vec(0, 0)  * 0 * dt)
+           else
+                _G.stop = false
+                local gameover = true
+           end
+              --sleep(dt*5)
         end
-        if hit == 10 then
-          while num > 0 do
-            table.remove(myMonsters, 1)
-            num = num - 1
-          end
-          hit = 11
+            --[[if hit == 10 then
+              while num > 0 do
+                table.remove(myMonsters, 1)
+                num = num - 1
+              end
+              hit = 11
+            end]]
         end
-      end
-  end
+end
+
 end
 
 return PlayStageState
