@@ -47,7 +47,7 @@ function PlayStageState:_load_view()
   self.atlas = SpriteAtlas()
   self.cursor = Cursor(self.battlefield)
   local _, right, top, _ = self.battlefield.bounds:get()
-  self.gold = Stats(Vec(right + 16, top), "Gold ", 1000)
+  self.gold = Stats(Vec(right + 16, top), "Gold ", 100)
   self.lives = Stats(Vec(610, 346), "x", 10)
   self:view('bg'):add('battlefield', self.battlefield)
   self:view('fg'):add('atlas', self.atlas)
@@ -65,6 +65,10 @@ local check_position = function(x, y)
   return true
 end
 
+local selected = Unit("archer")
+local unitsInMenu = {}
+local unitsInField = {}
+
 function PlayStageState:_load_Landscape(battlefield, landscape)
   local worldSize = {lower = -6, upper = 6}  math.randomseed(os.time())
   -- mundo 6x6 não preciso checar colisão na criação dos monstros.
@@ -75,6 +79,10 @@ function PlayStageState:_load_Landscape(battlefield, landscape)
       for i=1, length do
         local x = math.random(worldSize.lower,worldSize.upper)
         local y = math.random(worldSize.lower,worldSize.upper)
+        local aux = self.battlefield:tile_to_screen(Vec(x,y):get())
+        local index = Indexer.index(aux)
+        unitsInField[index] = Unit(object.type)
+
         if check_position(x, y) then
           table.insert(tab,x)
           table.insert(tab,y)
@@ -100,10 +108,6 @@ function PlayStageState:_move_unit_at(monster, pos)
   return unit
 end
 
-local selected
-local unitsInMenu
-local unitsInField
-
 function PlayStageState:_load_units()
   local pos = self.battlefield:tile_to_screen(0, 0)--mudar para o centro
   self.units = {}
@@ -113,9 +117,6 @@ function PlayStageState:_load_units()
   self:_create_unit_at('heart', pos)
   table.insert(_G.heart, pos)
 
-  selected = Unit("archer")
-  unitsInMenu = {}
-  unitsInField = {}
   -- Ainda da pra melhorar (usar os limites do quadro de brodas brancas como referencia para a posicao)
   herosMenu = require 'database.herosMenu'
   for _, hero in ipairs(herosMenu) do
@@ -123,8 +124,6 @@ function PlayStageState:_load_units()
     -- criar objeto guerreiro
     local index = Indexer.index(pos)
     unitsInMenu[index] = hero.appearance
-    print("indexedPos", index)
-    print("name", unitsInMenu[index])
     self:_create_unit_at(hero.appearance, pos)
   end
 
@@ -136,10 +135,7 @@ function PlayStageState:_load_units()
 end
 
 function PlayStageState:on_mousepressed(_, _, button)
-  --local name
   print("on_mousepressed button=", button)
-  --[[if button ~= 1 then name = 'warrior'
-  else name = 'archer' end]]
 
   -- Parametrizar o heroi a ser posto na tela
   local cursor = Vec(self.cursor:get_position())
@@ -150,29 +146,24 @@ function PlayStageState:on_mousepressed(_, _, button)
   -- cursor esta dentro do campo de batalha
   if (l <= x - 32 and x <= r - 32) and (t <= y - 32 and y <= bot - 32) then
     local index = Indexer.index(cursor)
-    if unitsInField[index] == nil then
+    local gold = self.gold.quantity
+
+    if unitsInField[index] == nil and gold > selected:get_cost() then
       unitsInField[index] = selected
       self:_create_unit_at(selected:get_appearance(), cursor)
-      self.gold.quantity = self.gold.quantity - 100
+      self.gold.quantity = self.gold.quantity - selected:get_cost()
     end
-    --name = "archer"
-    --table.insert(units, Unit(hero.name))
   end
 
   local menu = self.battlefield.menu_bounds
   -- cursor esta dentro do menu de selecao de personagens
   if (menu.left <= x and x <= menu.right) and (menu.top <= y and y <= menu.bottom) then
-    print("cursor esta dentro do menu de selecao de personagens")
     local pos = self.battlefield:pos_to_tile(cursor)
-    print("pos", pos)
-    print("unitsInMenu[pos]", unitsInMenu[pos])
     local index = Indexer.index(pos)
     -- pegar aqui o personagem selecionado
     if unitsInMenu[index] ~= nil then
       selected = Unit(unitsInMenu[index])
-      print("selected", selected)
     end
-    print("selectableUnitPosition", selectableUnitPosition)
   end
 end
 

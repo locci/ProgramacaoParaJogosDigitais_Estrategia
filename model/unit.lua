@@ -23,5 +23,8 @@ function Unit:set_color(color)
   self.spec.color = color
 end
 
-return Unit
+function Unit:get_cost()
+  return self.spec.cost
+end
 
+return Unit
