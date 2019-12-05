@@ -12,6 +12,7 @@ local CheckKill = require 'state.check_kill'
 local BuildWaves = require 'model.build_waves'
 local COLLISION = require 'state.collision'
 local Indexer = require 'database.indexer'
+local Sound = require 'common.sound'
 
 local PlayStageState = require 'common.class' (State)
 
@@ -54,6 +55,7 @@ function PlayStageState:_load_view()
   self:view('bg'):add('cursor', self.cursor)
   self:view('hud'):add('gold', self.gold)
   self:view('hud'):add('lives', self.lives)
+  Sound:play('thema')
 end
 
 local check_position = function(x, y)
@@ -117,7 +119,8 @@ function PlayStageState:_load_units()
   for i=9,12 do
     pos = self.battlefield:tile_to_screen(i, 2)
     self:_create_unit_at('heart', pos)
-    table.insert(_G.heart, pos)
+    local sound = true
+    table.insert(_G.heart, sound)
   end
 
   -- Ainda da pra melhorar (usar os limites do quadro de brodas brancas como referencia para a posicao)
@@ -204,8 +207,9 @@ local function go(posi, destinyX, destinyY)
   return X, Y, posi['x'], posi['y']
 end
 
-function PlayStageState:update(dt)
+local playHit = 0
 
+function PlayStageState:update(dt)
   local x = 0 local y = 0
   self.wave:update(dt)
   --local rand = love.math.random
@@ -231,7 +235,7 @@ function PlayStageState:update(dt)
               local pos = self.battlefield:tile_to_screen(x, y)
               local monster = self:_create_unit_at(type, pos)
               vel = math.random(5, 15)
-              table.insert(monster, {pos, vel, cont_monster, true, true})
+              table.insert(monster, {pos, vel, cont_monster, true, true})--5 hitdound
               table.insert(myMonsters , monster)
               cont_monster = cont_monster + 1
             end
@@ -256,7 +260,7 @@ function PlayStageState:update(dt)
       local sprite_instance = self.atlas:get(monster)
     --verifico colisoes com os ostaculos
       if COLLISION:checkCollision(pos['x'], pos['y'])  then
-          coorX, coorY,  pos['x'], pos['y'] = go(pos, 300, 300)
+          coorX, coorY, pos['x'], pos['y'] = go(pos, 300, 300)
           sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
       else
           coorX, coorY,  pos['x'], pos['y'] = go(pos, pos['x'] + 1, pos['y'] + 1)
@@ -264,6 +268,10 @@ function PlayStageState:update(dt)
       end
       if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
           hit = hit + 1
+          if aux[5] == true then
+               Sound:play('hit')
+               aux[5] = false
+          end
           if hit % 3  == 0 then
               pos = self.battlefield:tile_to_screen(contDeath, 2)
               self:_create_unit_at('kill', pos)

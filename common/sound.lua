@@ -9,7 +9,7 @@
 
 local SOUND = {}
 
- function SOUND.play(soundName)
+ function SOUND:play(soundName)
 
      if soundName == 'fail' then
          local src1 = love.audio.newSource("assets/sound/fail.ogg", "static")
@@ -36,6 +36,7 @@ local SOUND = {}
      end
 
       if soundName == 'page' then
+         print('oi')
          local src1 = love.audio.newSource("assets/sound/turnepage.ogg", "static")
          src1:setVolume(0.4) -- 90% of ordinary volume
          src1:setPitch(3) -- one octave lower
@@ -62,6 +63,18 @@ local SOUND = {}
          --src1:setPitch(3) -- one octave lower
          src1:play()
      end
+
+     if soundName == 'hit' then
+        local src1 = love.audio.newSource("assets/sound/hitcapital.ogg", "static")
+        src1:setVolume(0.4) -- 90% of ordinary volume
+        src1:play()
+     end
+
+      if soundName == 'thema' then
+             local src1 = love.audio.newSource("assets/sound/theme.ogg", "static")
+             src1:setVolume(0.4) -- 90% of ordinary volume
+             src1:play()
+      end
 
  end
 
