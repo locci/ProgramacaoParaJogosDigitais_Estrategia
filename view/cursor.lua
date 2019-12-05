@@ -16,7 +16,7 @@ end
 function Cursor:update(_)
   local mouse_pos = Vec(love.mouse.getPosition())
   -- print(mouse_pos)
-  local rounded = self.battlefield:round_to_tile(mouse_pos)
+  local rounded = self.battlefield:pos_to_tile(mouse_pos)
   self.position:set(rounded:get())
 end
 
