@@ -112,10 +112,13 @@ function PlayStageState:_load_units()
   local pos = self.battlefield:tile_to_screen(0, 0)--mudar para o centro
   self.units = {}
   -- Parametrizar a cidade desenhada
+  pos = self.battlefield:tile_to_screen(0, 0)
   self:_create_unit_at('capital', pos)
-  pos = self.battlefield:tile_to_screen(9, 2)
-  self:_create_unit_at('heart', pos)
-  table.insert(_G.heart, pos)
+  for i=9,12 do
+    pos = self.battlefield:tile_to_screen(i, 2)
+    self:_create_unit_at('heart', pos)
+    table.insert(_G.heart, pos)
+  end
 
   -- Ainda da pra melhorar (usar os limites do quadro de brodas brancas como referencia para a posicao)
   herosMenu = require 'database.herosMenu'
@@ -229,7 +232,6 @@ function PlayStageState:update(dt)
               local monster = self:_create_unit_at(type, pos)
               vel = math.random(5, 15)
               table.insert(monster, {pos, vel, cont_monster, true, true})
-              --self.monsters[monster] = true
               table.insert(myMonsters , monster)
               cont_monster = cont_monster + 1
             end
@@ -244,8 +246,8 @@ function PlayStageState:update(dt)
   local aux = {}
   local hit = 0
   local num = 10
+  local contDeath = 9
   local heartCont = 1
-
   local cont = 0
 
   for _, monster in ipairs(myMonsters) do--realizar o movimento
@@ -257,20 +259,23 @@ function PlayStageState:update(dt)
           coorX, coorY,  pos['x'], pos['y'] = go(pos, 300, 300)
           sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
       else
-          print('collision')
-          --aux[2] = aux[2] * 0.03
           coorX, coorY,  pos['x'], pos['y'] = go(pos, pos['x'] + 1, pos['y'] + 1)
           sprite_instance.position:add(Vec(coorX,coorY) * aux[2] * dt)
       end
       if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
           hit = hit + 1
-
-             if heartCont < #_G.heart then heartCont = heartCont + 1
-                  sprite_instance.position:add(Vec(0, 0)  * 0 * dt)
-             else
-                  _G.stop = false
-                  local gameover = true
-             end
+          if hit % 3  == 0 then
+              pos = self.battlefield:tile_to_screen(contDeath, 2)
+              self:_create_unit_at('kill', pos)
+              contDeath = contDeath + 1
+          end
+          if heartCont < #_G.heart then
+               sprite_instance.position:add(Vec(0, 0)  * 0 * dt)
+               heartCont = heartCont + 1
+          else
+             _G.stop = false
+             local gameover = true
+          end
           --end
               --[[if hit == 10 then
                 while num > 0 do
