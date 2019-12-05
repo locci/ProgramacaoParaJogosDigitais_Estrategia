@@ -106,41 +106,41 @@ function PlayStageState:_load_units()
   pos = self.battlefield:tile_to_screen(9, 2)
   self:_create_unit_at('heart', pos)
   table.insert(_G.heart, pos)
-
   pos = self.battlefield:tile_to_screen(10, -5)
   self:_create_unit_at('archer', pos)
-
   local landscape = self.stage.landscape[1]
   self:_load_Landscape(self.battlefield, landscape)
   self.wave = Wave(self.stage.waves[1])
   self.wave:start()
   self.monsters = {}
-
 end
 
-
 function PlayStageState:on_mousepressed(_, _, button)
-  local name
-  print("on_mousepressed button=", button)
-  if button ~= 1 then name = 'warrior'
-  else name = 'archer' end
+  --local name = 'warrior'
+  --nameHero = 'warrior'
+  --print("on_mousepressed button=", button)
+  --if button ~= 1 then name = 'warrior'
+  --else name = 'archer' end
   -- Parametrizar o heroi a ser posto na tela
   local cursorPositionVector = Vec(self.cursor:get_position())
   local x = cursorPositionVector.x
   local y = cursorPositionVector.y
   local b = self.battlefield.bounds
 
-  -- cursor esta dentro do campo de batalha
+  if x == 620 and y == 140 then
+     _G.nameHero = 'archer'
+  end
+
   if (b.left <= x - 32 and x <= b.right - 32) and (b.top <= y - 32 and y <= b.bottom - 32) then
-    self:_create_unit_at(name, cursorPositionVector)
+    self:_create_unit_at(_G.nameHero, cursorPositionVector)
     self.gold.quantity = self.gold.quantity - 100
   end
 
   local menu = self.battlefield.menu_bounds
   -- cursor esta dentro do menu de selecao de personagens
   if (menu.left <= x and x <= menu.right) and (menu.top <= y and y <= menu.bottom) then
-    local selectableUnitPosition = self.battlefield:round_to_tile(cursorPositionVector)
-    print(selectableUnitPosition)
+   local selectableUnitPosition = self.battlefield:round_to_tile(cursorPositionVector)
+    --print(selectableUnitPosition)
   end
 end
 
@@ -227,12 +227,11 @@ for _, monster in ipairs(myMonsters) do--realizar o movimento
     aux = monster[1]
     local pos = aux[1]
     local sprite_instance = self.atlas:get(monster)
-  --verifico colisoes com os ostaculos
     if COLLISION:checkCollision(pos['x'], pos['y'])  then
         coorX, coorY,  pos['x'], pos['y'] = go(pos, 300, 300)
         sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
     else
-        print('collision')
+        --print('collision')
         --aux[2] = aux[2] * 0.03
         coorX, coorY,  pos['x'], pos['y'] = go(pos, pos['x'] + 1, pos['y'] + 1)
         sprite_instance.position:add(Vec(coorX,coorY) * aux[2] * dt)

@@ -18,6 +18,7 @@ function love.load()
   _G.landscape = {}
   table.insert(_G.landscape, castlePos)
   _G.heart = {}
+  _G.nameHero = 'warrior'
   end
 
 
