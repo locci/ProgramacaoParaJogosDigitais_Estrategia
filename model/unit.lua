@@ -19,11 +19,6 @@ function Unit:get_appearance()
   return self.spec.appearance
 end
 
-function Unit:changeHp(damage)
-  local aux = math.min(self.spec.max_hp, self.hp - damage)
-  self.hp = math.max(0, aux)
-end
-
 function Unit:get_hp()
   return self.hp, self.spec.max_hp
 end
@@ -68,12 +63,23 @@ function Unit:isDobby()
   return self.spec.isDobby
 end
 
+function Unit:changeHp(damage)
+  local aux = math.min(self.spec.max_hp, self.hp - damage)
+  self.hp = math.max(0, aux)
+end
+
 function Unit:getHitDamage()
   return self.spec.hitDamage
 end
 
 function Unit:getFieldRadius()
   return self.spec.fieldRadius
+end
+
+function Unit:solve(unit2, dist)
+  if self.spec.solver then
+    self.spec.solver(unit2, dist)
+  end
 end
 
 return Unit
