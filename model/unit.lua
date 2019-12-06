@@ -13,8 +13,12 @@ function Unit:get_name()
   return self.spec.name
 end
 
-function Unit:reset(name)
+function Unit:reset(name, SpriteAtlas)
+  local pos = self:getPos()
   self:_init(name)
+  local app = self:get_appearance()
+  print(SpriteAtlas)
+  SpriteAtlas:changeId(self, pos, app)
 end
 
 function Unit:get_appearance()
@@ -92,7 +96,7 @@ function Unit:getDrawCircle()
   return self.drawCircle
 end
 
-function Unit:solve(unit2, dist)
+function Unit:solve(unit2, dist, )
   if self.spec.solver then
     self.spec.solver(unit2, dist)
   end

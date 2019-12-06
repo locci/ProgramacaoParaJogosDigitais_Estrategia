@@ -36,6 +36,11 @@ function AtlasRenderer:add(name, pos, sprite_id)
   return instance
 end
 
+function AtlasRenderer:changeId(name, pos, sprite_id)
+  local instance = { position = pos, sprite_id = sprite_id }
+  self.instances[name] = instance
+end
+
 function AtlasRenderer:remove(name)
   self.instances[name] = nil
 end

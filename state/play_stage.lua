@@ -227,7 +227,7 @@ function PlayStageState:update(dt)
   local x = 0 local y = 0
   self.wave:update(dt)
 
-  Hit.getStats(unitsInField)
+  Hit.getStats(unitsInField, self.atlas)
   Hit:updateBattle(dt)
 
   local pending = self.wave:poll()
