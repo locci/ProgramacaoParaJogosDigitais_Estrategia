@@ -50,10 +50,10 @@ end
 function ChooseStageState:on_keypressed(key)
   if key == 'down' then
     self.menu:next()
-    Sound:play('updown')
+    Sound:play('updown', 0.9, 3)
   elseif key == 'up' then
     self.menu:previous()
-    Sound:play('updown')
+    Sound:play('updown', 0.9, 3)
   elseif key == 'return' then
     local option = self.menu:current_option()
     local params = { stage = self.stages[option] }
@@ -64,5 +64,3 @@ function ChooseStageState:on_keypressed(key)
 end
 
 return ChooseStageState
-
-

@@ -55,7 +55,7 @@ function PlayStageState:_load_view()
   self:view('bg'):add('cursor', self.cursor)
   self:view('hud'):add('gold', self.gold)
   self:view('hud'):add('lives', self.lives)
-  Sound:play('thema')
+  Sound:play('theme', 0.4)
 end
 
 local check_position = function(x, y)
@@ -269,7 +269,7 @@ function PlayStageState:update(dt)
       if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
           hit = hit + 1
           if aux[5] == true then
-               Sound:play('hit')
+               Sound:play('hitcapital', 0.4)
                aux[5] = false
           end
           if hit % 3  == 0 then
