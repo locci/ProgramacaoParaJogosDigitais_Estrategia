@@ -16,7 +16,8 @@ function Unit:get_appearance()
 end
 
 function Unit:changeHp(damage)
-  self.hp = math.max(0, self.hp - damage)
+  local aux = math.min(self.spec.max_hp, self.hp - damage)
+  self.hp = math.max(0, aux)
 end
 
 function Unit:get_hp()
@@ -45,6 +46,10 @@ end
 
 function Unit:isHero()
   return self.spec.isHero
+end
+
+function Unit:isHealer()
+  return self.spec.isHealer
 end
 
 function Unit:getHitDamage()

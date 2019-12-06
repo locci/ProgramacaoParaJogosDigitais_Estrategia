@@ -23,10 +23,19 @@ function updateDamage(dt)
         local dist = (unit1:getPos() - unit2:getPos()):length()
         if dist <= unit1:getFieldRadius() then
           --porradaria franca
-          unit2:changeHp(unit1:getHitDamage())
-          --print("unit1=", unit1:get_name(), unit1:get_hp())
+          if unit2:get_hp() > 0 then
+            unit2:changeHp(unit1:getHitDamage())
+          end
+          print("unit1=", unit1:get_name(), unit1:get_hp())
           print("\nunit2=", unit2:get_name(), unit2:get_hp())
         end
+      end
+      if unit1:isHealer() and unit2:isHero() then
+        unit2:changeHp(unit1:getHitDamage())
+        print("\nunit2=", unit2:get_name(), unit2:get_hp())
+      elseif unit2:isHealer() and unit1:isHero() then
+        --print("\nunit1=", unit1:get_name(), unit1:get_hp())
+        unit1:changeHp(unit2:getHitDamage())
       end
     end
   end

@@ -49,7 +49,8 @@ function PlayStageState:_load_view()
   self.atlas = SpriteAtlas()
   self.cursor = Cursor(self.battlefield)
   local _, right, top, _ = self.battlefield.bounds:get()
-  self.gold = Stats(Vec(right + 16, top), "Gold ", 500)
+  local gold = self.stage.gold
+  self.gold = Stats(Vec(right + 16, top), "Gold ", gold)
   self.lives = Stats(Vec(610, 346), "x", 10)
   self:view('bg'):add('battlefield', self.battlefield)
   self:view('fg'):add('atlas', self.atlas)
@@ -136,7 +137,7 @@ function PlayStageState:_load_units()
     -- criar objeto guerreiro
     local index = Indexer.index(pos)
     unitsInMenu[index] = hero.appearance
-    self:_create_unit_at(hero.appearance, pos, true)
+    self:_create_unit_at(hero.appearance, pos)
   end
 
   local landscape = self.stage.landscape[1]
@@ -172,6 +173,7 @@ function PlayStageState:on_mousepressed(_, _, button)
     local index = Indexer.index(pos)
     -- pegar aqui o personagem selecionado
     if unitsInMenu[index] ~= nil then
+      print(unitsInMenu[index])
       selected = Unit(unitsInMenu[index])
       selected:setPos(pos)
     end

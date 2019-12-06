@@ -6,5 +6,6 @@ return {
   },
   landscape ={
     {{type = 'rock', num = 10}, {type = 'tree', num = 4}},
-  }
+  },
+  gold = 3131
 }

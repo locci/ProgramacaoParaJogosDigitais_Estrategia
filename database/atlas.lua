@@ -57,6 +57,10 @@ return {
     kill = {
           frame = { 23, 27 },
           color = 'red'
-     },
+    },
+    healer = {
+      frame = { 24, 1 },
+      color = 'yellow'
+    }
   }
 }

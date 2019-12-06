@@ -7,6 +7,6 @@ return {
     { {'blue_slime', 1,},  {'green_slime', 1 }},
   },
   landscape ={
-    {{type = 'rock', num = 8}, {type = 'tree', num = 5}},}--padrao
+    {{type = 'rock', num = 8}, {type = 'tree', num = 5}},},--padrao
+  gold = 200,
 }
-
