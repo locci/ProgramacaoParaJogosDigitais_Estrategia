@@ -15,6 +15,12 @@ local Indexer = require 'database.indexer'
 local Sound = require 'common.sound'
 local Hit = require 'battle.hit'
 
+local castlePos = {0,0}
+local landscp = {}
+table.insert(landscp, castlePos)
+local heart = {}
+local nameHero = 'warrior'
+
 local PlayStageState = require 'common.class' (State)
 
 function PlayStageState:_init(stack)
@@ -61,7 +67,7 @@ function PlayStageState:_load_view()
 end
 
 local check_position = function(x, y)
-  for _, pos in ipairs(_G.landscape) do
+  for _, pos in ipairs(landscp) do
     if pos[1] == x and pos[2] == y then
       return false
     end
@@ -90,10 +96,10 @@ function PlayStageState:_load_Landscape(battlefield, landscape)
         if check_position(x, y) then
           table.insert(tab,x)
           table.insert(tab,y)
-          table.insert(_G.landscape,tab)
+          table.insert(landscp,tab)
           tab = {}
           local pos = battlefield:tile_to_screen(x, y)
-          table.insert(_G.landscape,pos)
+          table.insert(landscp,pos)
           self:_create_unit_at(object.type, pos, true)
         end
       end
@@ -128,7 +134,7 @@ function PlayStageState:_load_units()
     pos = self.battlefield:tile_to_screen(i, 2)
     self:_create_unit_at('heart', pos)
     local sound = true
-    table.insert(_G.heart, sound)
+    table.insert(heart, sound)
   end
 
   -- Ainda da pra melhorar (usar os limites do quadro de brodas brancas como referencia para a posicao)
@@ -271,7 +277,7 @@ function PlayStageState:update(dt)
       local pos = aux[1]
       local sprite_instance = self.atlas:get(monster)
     --verifico colisoes com os ostaculos
-      if CIRCLEFIELD:checkCollision(pos['x'], pos['y'])  then
+      if CIRCLEFIELD:checkCollision(pos['x'], pos['y'], landscp)  then
           coorX, coorY, pos['x'], pos['y'] = go(pos, 300, 300)
           sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
       else
@@ -289,11 +295,11 @@ function PlayStageState:update(dt)
               self:_create_unit_at('kill', pos)
               contDeath = contDeath + 1
           end
-          if heartCont < #_G.heart then
+          if heartCont < #heart then
                sprite_instance.position:add(Vec(0, 0)  * 0 * dt)
                heartCont = heartCont + 1
           else
-             _G.stop = false
+             stop = false
              local gameover = true
           end
     end
