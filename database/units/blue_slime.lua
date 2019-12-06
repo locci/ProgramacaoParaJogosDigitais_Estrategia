@@ -7,6 +7,9 @@
 --
 return {
     name = "Blue Slime",
+    isMonster = true,
+    hitDamage = 5,
+    fieldRadius = 50, 
     max_hp = 4,
     appearance = 'blue_slime',
     cost = 30

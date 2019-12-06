@@ -1,7 +1,7 @@
 
-local COLLISION = {}
+local CIRCLEFIELD = {}
 
-function COLLISION:checkCollision(posX , posY)
+function CIRCLEFIELD:checkCollision(posX , posY)
 
  for _, j in pairs(_G.landscape) do
     if j['x'] ~= nil and j['y'] ~= nil then
@@ -13,4 +13,5 @@ function COLLISION:checkCollision(posX , posY)
     return true
 end
 
-return COLLISION
+
+return CIRCLEFIELD

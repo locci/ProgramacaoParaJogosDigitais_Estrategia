@@ -10,9 +10,10 @@ local State = require 'state'
 local Chosestartmonstercoord = require 'state.chose_start_monster_coord'
 local CheckKill = require 'state.check_kill'
 local BuildWaves = require 'model.build_waves'
-local COLLISION = require 'state.collision'
+local CIRCLEFIELD = require 'battle.circlefield'
 local Indexer = require 'database.indexer'
 local Sound = require 'common.sound'
+local Hit = require 'battle.hit'
 
 local PlayStageState = require 'common.class' (State)
 
@@ -48,7 +49,7 @@ function PlayStageState:_load_view()
   self.atlas = SpriteAtlas()
   self.cursor = Cursor(self.battlefield)
   local _, right, top, _ = self.battlefield.bounds:get()
-  self.gold = Stats(Vec(right + 16, top), "Gold ", 100)
+  self.gold = Stats(Vec(right + 16, top), "Gold ", 500)
   self.lives = Stats(Vec(610, 346), "x", 10)
   self:view('bg'):add('battlefield', self.battlefield)
   self:view('fg'):add('atlas', self.atlas)
@@ -82,8 +83,8 @@ function PlayStageState:_load_Landscape(battlefield, landscape)
         local x = math.random(worldSize.lower,worldSize.upper)
         local y = math.random(worldSize.lower,worldSize.upper)
         local aux = self.battlefield:tile_to_screen(Vec(x,y):get())
-        local index = Indexer.index(aux)
-        unitsInField[index] = Unit(object.type)
+
+        local unit = self:_create_unit_at(object.type, aux, true)
 
         if check_position(x, y) then
           table.insert(tab,x)
@@ -92,14 +93,19 @@ function PlayStageState:_load_Landscape(battlefield, landscape)
           tab = {}
           local pos = battlefield:tile_to_screen(x, y)
           table.insert(_G.landscape,pos)
-          self:_create_unit_at(unit, pos)
+          self:_create_unit_at(object.type, pos, true)
         end
       end
   end
 end
 
-function PlayStageState:_create_unit_at(specname, pos)
+function PlayStageState:_create_unit_at(specname, pos, putIn)
   local unit = Unit(specname)
+  if putIn then
+    local index = Indexer.index(pos)
+    unit:setPos(pos)
+    unitsInField[index] = unit
+  end
   self.atlas:add(unit, pos, unit:get_appearance())
   return unit
 end
@@ -115,7 +121,7 @@ function PlayStageState:_load_units()
   self.units = {}
   -- Parametrizar a cidade desenhada
   pos = self.battlefield:tile_to_screen(0, 0)
-  self:_create_unit_at('capital', pos)
+  self:_create_unit_at('capital', pos, true)
   for i=9,12 do
     pos = self.battlefield:tile_to_screen(i, 2)
     self:_create_unit_at('heart', pos)
@@ -130,7 +136,7 @@ function PlayStageState:_load_units()
     -- criar objeto guerreiro
     local index = Indexer.index(pos)
     unitsInMenu[index] = hero.appearance
-    self:_create_unit_at(hero.appearance, pos)
+    self:_create_unit_at(hero.appearance, pos, true)
   end
 
   local landscape = self.stage.landscape[1]
@@ -141,7 +147,6 @@ function PlayStageState:_load_units()
 end
 
 function PlayStageState:on_mousepressed(_, _, button)
-  print("on_mousepressed button=", button)
 
   -- Parametrizar o heroi a ser posto na tela
   local cursor = Vec(self.cursor:get_position())
@@ -155,8 +160,7 @@ function PlayStageState:on_mousepressed(_, _, button)
     local gold = self.gold.quantity
 
     if unitsInField[index] == nil and gold > selected:get_cost() then
-      unitsInField[index] = selected
-      self:_create_unit_at(selected:get_appearance(), cursor)
+      self:_create_unit_at(selected:get_appearance(), cursor, true)
       self.gold.quantity = self.gold.quantity - selected:get_cost()
     end
   end
@@ -169,13 +173,14 @@ function PlayStageState:on_mousepressed(_, _, button)
     -- pegar aqui o personagem selecionado
     if unitsInMenu[index] ~= nil then
       selected = Unit(unitsInMenu[index])
+      selected:setPos(pos)
     end
   end
 end
 
 function sleep(s)
   local delay = 8000000
-  --print(delay)
+
   while delay > 0 do
     delay = delay - s
   end
@@ -190,20 +195,20 @@ local coorY = 0
 local function go(posi, destinyX, destinyY)
   local X
   local Y
-        if posi['x'] > destinyX then
-        posi['x'] = posi['x'] - 1
-        X = -1
-      else
-        posi['x'] = posi['x'] + 1
-        X = 1
-      end
-      if posi['y'] > destinyY then
-         posi['y'] = posi['y'] - 1
-         Y = -1
-      else
-         posi['y'] = posi['y'] + 1
-         Y = 1
-      end
+  if posi['x'] > destinyX then
+    posi['x'] = posi['x'] - 1
+    X = -1
+  else
+    posi['x'] = posi['x'] + 1
+    X = 1
+  end
+  if posi['y'] > destinyY then
+     posi['y'] = posi['y'] - 1
+     Y = -1
+  else
+     posi['y'] = posi['y'] + 1
+     Y = 1
+  end
   return X, Y, posi['x'], posi['y']
 end
 
@@ -212,7 +217,10 @@ local playHit = 0
 function PlayStageState:update(dt)
   local x = 0 local y = 0
   self.wave:update(dt)
-  --local rand = love.math.random
+
+  Hit.getStats(unitsInField)
+  Hit:updateBattle(dt)
+
   local pending = self.wave:poll()
   while pending > 0 do --calcular o caminho
     if stop then
@@ -233,8 +241,9 @@ function PlayStageState:update(dt)
            while cont_monster < num do
               x, y = Chosestartmonstercoord.origen_coord(x, y)
               local pos = self.battlefield:tile_to_screen(x, y)
-              local monster = self:_create_unit_at(type, pos)
-              vel = math.random(5, 15)
+
+              local monster = self:_create_unit_at(type, pos, true)
+              vel = math.random(4, 4.1)
               table.insert(monster, {pos, vel, cont_monster, true, true})--5 hitdound
               table.insert(myMonsters , monster)
               cont_monster = cont_monster + 1
@@ -259,7 +268,7 @@ function PlayStageState:update(dt)
       local pos = aux[1]
       local sprite_instance = self.atlas:get(monster)
     --verifico colisoes com os ostaculos
-      if COLLISION:checkCollision(pos['x'], pos['y'])  then
+      if CIRCLEFIELD:checkCollision(pos['x'], pos['y'])  then
           coorX, coorY, pos['x'], pos['y'] = go(pos, 300, 300)
           sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
       else
@@ -284,14 +293,6 @@ function PlayStageState:update(dt)
              _G.stop = false
              local gameover = true
           end
-          --end
-              --[[if hit == 10 then
-                while num > 0 do
-                  table.remove(myMonsters, 1)
-                  num = num - 1
-                end
-                hit = 11
-              end]]
     end
   end
 
