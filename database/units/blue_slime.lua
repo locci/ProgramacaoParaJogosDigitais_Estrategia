@@ -1,5 +1,5 @@
 
-local hitDamage = 150
+local hitDamage = 15
 local fieldRadius = 50
 
 return {

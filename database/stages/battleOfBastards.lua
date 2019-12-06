@@ -2,7 +2,7 @@
 return {
   title = 'Battle of Bastards',
   waves = {
-   { {'blue_slime', 0}, {'green_slime', 1} },
+   { {'blue_slime', 3}, {'green_slime', 3} },
   },
   landscape ={
     {{type = 'rock', num = 10}, {type = 'tree', num = 4}},
