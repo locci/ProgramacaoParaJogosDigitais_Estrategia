@@ -3,7 +3,7 @@ local CIRCLEFIELD = require 'battle.circlefield'
 
 local units = {}
 local counter = 0
-local delay = 1
+local delay = 3
 
 function Hit:updateBattle(dt)
   --updateMove(dt)
@@ -20,8 +20,9 @@ function updateDamage(dt)
     for _, unit2 in pairs(units) do
       local dist = (unit1:getPos() - unit2:getPos()):length()
 
-
-      unit1:solve(unit2, dist)
+      if unit1:get_hp() > 0 then
+        unit1:solve(unit2, dist)
+      end
       --[[if unit1:isHero() and unit2:isMonster() then
         if dist <= unit1:getFieldRadius() then
           --porradaria franca

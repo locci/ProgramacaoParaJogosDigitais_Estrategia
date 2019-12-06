@@ -19,7 +19,7 @@ function love.load()
   table.insert(_G.landscape, castlePos)
   _G.heart = {}
   _G.nameHero = 'warrior'
-  end
+end
 
 
 
@@ -41,4 +41,3 @@ for eventname, _ in pairs(love.handlers) do
     _stack:forward(eventname, ...)
   end
 end
-

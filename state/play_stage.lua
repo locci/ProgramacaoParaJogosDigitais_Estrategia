@@ -100,13 +100,14 @@ function PlayStageState:_load_Landscape(battlefield, landscape)
   end
 end
 
-function PlayStageState:_create_unit_at(specname, pos, putIn)
+function PlayStageState:_create_unit_at(specname, pos, putIn, drawCircle)
   local unit = Unit(specname)
   if putIn then
     local index = Indexer.index(pos)
     unit:setPos(pos)
     unitsInField[index] = unit
   end
+  unit:setDrawCircle(drawCircle)
   self.atlas:add(unit, pos, unit:get_appearance())
   return unit
 end
@@ -137,7 +138,7 @@ function PlayStageState:_load_units()
     -- criar objeto guerreiro
     local index = Indexer.index(pos)
     unitsInMenu[index] = hero.appearance
-    self:_create_unit_at(hero.appearance, pos)
+    self:_create_unit_at(hero.appearance, pos, _, false)
   end
 
   local landscape = self.stage.landscape[1]
@@ -161,7 +162,7 @@ function PlayStageState:on_mousepressed(_, _, button)
     local gold = self.gold.quantity
 
     if unitsInField[index] == nil and gold > selected:get_cost() then
-      self:_create_unit_at(selected:get_appearance(), cursor, true)
+      self:_create_unit_at(selected:get_appearance(), cursor, true, true)
       self.gold.quantity = self.gold.quantity - selected:get_cost()
     end
   end
@@ -244,7 +245,7 @@ function PlayStageState:update(dt)
               x, y = Chosestartmonstercoord.origen_coord(x, y)
               local pos = self.battlefield:tile_to_screen(x, y)
 
-              local monster = self:_create_unit_at(type, pos, true)
+              local monster = self:_create_unit_at(type, pos, true, true)
               vel = math.random(4, 4.1)
               table.insert(monster, {pos, vel, cont_monster, true, true})--5 hitdound
               table.insert(myMonsters , monster)

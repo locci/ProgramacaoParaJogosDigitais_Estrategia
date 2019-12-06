@@ -1,6 +1,6 @@
 
-hitDamage = 5
-fieldRadius = 50
+local hitDamage = 150
+local fieldRadius = 50
 
 return {
     name = "Blue Slime",
@@ -10,8 +10,8 @@ return {
         unit2:changeHp(hitDamage)
       end
     end,
-    hitDamage,
-    fieldRadius,
+    hitDamage = hitDamage,
+    fieldRadius = fieldRadius,
     max_hp = 4,
     appearance = 'blue_slime',
     cost = 30

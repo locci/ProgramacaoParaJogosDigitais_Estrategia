@@ -1,6 +1,6 @@
 
-hitDamage = -10
-fieldRadius = 200
+local hitDamage = -10
+local fieldRadius = 200
 
 return {
   name = "healer",
@@ -12,8 +12,8 @@ return {
       end
     end
   end,
-  hitDamage,
-  fieldRadius,
+  hitDamage = hitDamage,
+  fieldRadius = fieldRadius,
   max_hp = 1000,
   appearance = 'healer',
   cost = 1

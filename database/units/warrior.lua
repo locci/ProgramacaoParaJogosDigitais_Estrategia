@@ -1,6 +1,6 @@
 
-hitDamage = 35
-fieldRadius = 150
+local hitDamage = 35
+local fieldRadius = 150
 
 return {
   name = "Warrior Troop",
@@ -10,8 +10,8 @@ return {
       unit2:changeHp(hitDamage)
     end
   end,
-  hitDamage,
-  fieldRadius,
+  hitDamage = hitDamage,
+  fieldRadius = fieldRadius,
   max_hp = 50,
   appearance = 'warrior',
   cost = 45

@@ -64,11 +64,11 @@ return {
     },
     dengue = {
       frame = { 21, 8 },
-      color = 'brown'
+      color = 'darkBlue'
     },
     dobby = {
       frame = { 29, 2 },
-      color = 'lightBrown'
+      color = 'brown'
     },
   }
 }

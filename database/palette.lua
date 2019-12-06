@@ -9,5 +9,5 @@ return {
   trans = {106, 76, 48},
   yellow = { 1, 1, 0 },
   brown = { 1, 0.5, 0},
-  lightBrown = { 1, 0.5, 0.2}
+  darkBlue = { .2, .2, .5 }
 }

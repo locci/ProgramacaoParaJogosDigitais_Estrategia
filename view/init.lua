@@ -32,4 +32,3 @@ function View:draw()
 end
 
 return View
-

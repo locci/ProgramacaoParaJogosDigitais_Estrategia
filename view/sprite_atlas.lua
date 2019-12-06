@@ -51,7 +51,7 @@ end
 function AtlasRenderer:draw()
   local g = love.graphics
   g.push()
-  for _, instance in pairs(self.instances) do
+  for unitTable, instance in pairs(self.instances) do
     local tex, sprite = self.texture, self.sprites[instance.sprite_id]
     local x, y = instance.position:get()
     x = math.floor(x)
@@ -59,9 +59,12 @@ function AtlasRenderer:draw()
     g.setColor(PALLETE_DB[sprite.color])
     g.draw(tex, sprite.quad, x, y, 0, 2, 2,
            ATLAS_DB.frame_width/2, ATLAS_DB.frame_height/2)
+
+    if unitTable:getDrawCircle() then
+      g.circle('line', x, y, unitTable:getFieldRadius())
+    end
   end
   g.pop()
 end
 
 return AtlasRenderer
-

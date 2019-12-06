@@ -5,6 +5,8 @@ function Unit:_init(specname)
   local spec = require('database.units.' .. specname)
   self.spec = spec
   self.hp = spec.max_hp
+  self.hitDamage = self.spec.hitDamage
+  --print(self.spec.appearance, self.hitDamage)
 end
 
 function Unit:get_name()
@@ -41,6 +43,8 @@ end
 
 function Unit:dimHitDamage(dim)
   self.hitDamage = math.max(0, self.hitDamage - dim)
+  print("dim", dim)
+  print(self:get_name(), self.hitDamage)
 end
 
 function Unit:isMonster()
@@ -73,7 +77,19 @@ function Unit:getHitDamage()
 end
 
 function Unit:getFieldRadius()
-  return self.spec.fieldRadius
+  if self.spec.fieldRadius then
+    return self.spec.fieldRadius
+  else
+    return 0
+  end
+end
+
+function Unit:setDrawCircle(drawCircle)
+  self.drawCircle = drawCircle
+end
+
+function Unit:getDrawCircle()
+  return self.drawCircle
 end
 
 function Unit:solve(unit2, dist)
