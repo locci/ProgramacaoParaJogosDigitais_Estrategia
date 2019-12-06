@@ -61,6 +61,14 @@ return {
     healer = {
       frame = { 24, 1 },
       color = 'yellow'
-    }
+    },
+    dengue = {
+      frame = { 21, 8 },
+      color = 'brown'
+    },
+    dobby = {
+      frame = { 29, 2 },
+      color = 'lightBrown'
+    },
   }
 }

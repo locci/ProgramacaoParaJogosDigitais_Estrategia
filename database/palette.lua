@@ -7,5 +7,7 @@ return {
   white = { .7, .7, .9 },
   gray = { .3, .3, .3 },
   trans = {106, 76, 48},
-  yellow = { 1, 1, 0 }
+  yellow = { 1, 1, 0 },
+  brown = { 1, 0.5, 0},
+  lightBrown = { 1, 0.5, 0.2}
 }

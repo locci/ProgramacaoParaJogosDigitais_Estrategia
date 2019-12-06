@@ -48,6 +48,37 @@ function updateDamage(dt)
           unit1:changeHp(unit2:getHitDamage())
         end
       end
+
+      -- diminui a força
+      local dim
+      if unit1:isDengue() and unit2:isMonster() then
+        dim = unit1:getHitDamage()
+        if dist <= unit1:getFieldRadius() then
+          unit2:dimHitDamage(dim)
+        end
+      elseif unit2:isDengue() and unit1:isMonster() then
+        dim = unit2:getHitDamage()
+        if dist <= unit2:getFieldRadius() then
+          print("dengue", unit1:get_name())
+          unit1:dimHitDamage(dim)
+        end
+      end
+
+      -- troca a identidade dos outros
+      if unit1:isDobby() and unit2:isMonster() then
+        if dist <= unit1:getFieldRadius() then
+          if unit2:get_name() == "blue_slime" then
+            unit2:reset("green_slime")
+          end
+        end
+      elseif unit2:isDobby() and unit1:isMonster() then
+        if dist <= unit2:getFieldRadius() then
+          if unit1:get_name() == "blue_slime" then
+            unit1:reset("green_slime")
+          end
+        end
+      end
+
     end
   end
 end

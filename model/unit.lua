@@ -11,6 +11,10 @@ function Unit:get_name()
   return self.spec.name
 end
 
+function Unit:reset(name)
+  self:_init(name)
+end
+
 function Unit:get_appearance()
   return self.spec.appearance
 end
@@ -40,6 +44,10 @@ function Unit:setPos(pos)
   self.pos = pos
 end
 
+function Unit:dimHitDamage(dim)
+  self.hitDamage = math.max(0, self.hitDamage - dim)
+end
+
 function Unit:isMonster()
   return self.spec.isMonster
 end
@@ -50,6 +58,14 @@ end
 
 function Unit:isHealer()
   return self.spec.isHealer
+end
+
+function Unit:isDengue()
+  return self.spec.isDengue
+end
+
+function Unit:isDobby()
+  return self.spec.isDobby
 end
 
 function Unit:getHitDamage()
