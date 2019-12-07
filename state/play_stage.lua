@@ -166,8 +166,16 @@ function PlayStageState:on_mousepressed(_, _, button)
   if (l <= x - 32 and x <= r - 32) and (t <= y - 32 and y <= bot - 32) then
     local index = Indexer.index(cursor)
     local gold = self.gold.quantity
+    local unit = unitsInField[index]
 
-    if unitsInField[index] == nil and gold > selected:get_cost() then
+    -- LEVEL UP
+    local lvlCost = selected:getLevelUpCost()
+    if unit and not unit:isMaxLevel() and gold > lvlCost then
+      unit:levelUp()
+      self.gold.quantity = self.gold.quantity - lvlCost
+    end
+
+    if unit == nil and gold > selected:get_cost() then
       self:_create_unit_at(selected:get_appearance(), cursor, true, true)
       self.gold.quantity = self.gold.quantity - selected:get_cost()
     end

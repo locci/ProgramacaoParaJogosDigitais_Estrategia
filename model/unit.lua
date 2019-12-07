@@ -6,7 +6,6 @@ function Unit:_init(specname)
   self.spec = spec
   self.hp = spec.max_hp
   self.hitDamage = self.spec.hitDamage
-  --print(self.spec.appearance, self.hitDamage)
 end
 
 function Unit:get_name()
@@ -101,6 +100,28 @@ function Unit:solve(unit2, dist, SpriteAtlas)
   if self.spec.solver then
     self.spec.solver(unit2, dist, SpriteAtlas)
   end
+end
+
+function Unit:levelUp()
+  local hit, hp, cost = 0, 0, 0
+  local level = self.spec.level
+
+  if level + 1 <= self.spec.maxLevel then
+    hit, hp, cost = self.spec.levelUp(level)
+    self.spec.level = level + 1
+  end
+  print("depois", hit, hp, cost)
+  self.spec.hitDamage = self.spec.hitDamage + hit
+  self.spec.max_hp = self.spec.max_hp + hp
+  self.spec.cost = self.spec.cost + cost
+end
+
+function Unit:getLevelUpCost()
+  return self.spec.levelUpCost
+end
+
+function Unit:isMaxLevel()
+  return (self.spec.level == self.spec.maxLevel)
 end
 
 return Unit

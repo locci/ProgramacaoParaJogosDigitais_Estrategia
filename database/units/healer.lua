@@ -16,5 +16,22 @@ return {
   fieldRadius = fieldRadius,
   max_hp = 1000,
   appearance = 'healer',
-  cost = 1
+  cost = 100,
+
+  maxLevel = 3,
+  level = 1,
+  levelUpCost = 500,
+  levelUp = function(level)
+    local hit, hp, cost
+    if level == 1 then
+      hit = -20
+      hp = 300
+      cost = 100
+    elseif level == 2 then
+      hit = -30
+      hp = 400
+      cost = 200
+    end
+    return hit, hp, cost
+  end
 }

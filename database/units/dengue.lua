@@ -17,5 +17,18 @@ return {
   fieldRadius = fieldRadius,
   max_hp = 100,
   appearance = 'dengue',
-  cost = 50
+  cost = 50,
+
+  maxLevel = 2,
+  level = 1,
+  levelUpCost = 300,
+  levelUp = function(level)
+    local hit, hp, cost
+    if level == 1 then
+      hit = 5
+      hp = 50
+      cost = 130
+    end
+    return hit, hp, cost
+  end
 }
