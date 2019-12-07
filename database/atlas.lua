@@ -70,5 +70,9 @@ return {
       frame = { 29, 2 },
       color = 'brown'
     },
+    druid = {
+      frame = { 31, 1 },
+      color = 'purple'
+    },
   }
 }

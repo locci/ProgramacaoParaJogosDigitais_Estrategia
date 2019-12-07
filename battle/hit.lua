@@ -21,7 +21,7 @@ function updateDamage(dt)
     for _, unit2 in pairs(units) do
       local dist = (unit1:getPos() - unit2:getPos()):length()
 
-      if unit1:get_hp() > 0 then
+      if unit1:get_hp() > 0 and unit2:get_hp() > 0 then
         unit1:solve(unit2, dist, SpriteAtlas)
       end
 
