@@ -1,22 +1,11 @@
 local Hit = {}
-local CIRCLEFIELD = require 'battle.circlefield'
 
 local units = {}
 local counter = 0
 local delay = 3
 local SpriteAtlas = nil
 
-function Hit:updateBattle(dt)
-  --updateMove(dt)
-  counter = counter + dt
-  if counter >= delay then
-    updateDamage(dt)
-    updateImages(dt)
-    counter = counter % delay
-  end
-end
-
-function updateDamage(dt)
+local function updateDamage(_)
   for _, unit1 in pairs(units) do
     for _, unit2 in pairs(units) do
       local dist = (unit1:getPos() - unit2:getPos()):length()
@@ -29,9 +18,13 @@ function updateDamage(dt)
   end
 end
 
--- Se morrer, tirar da tela (p ex)
-function updateImages(dt)
-
+function Hit.updateBattle(dt)
+  --updateMove(dt)
+  counter = counter + dt
+  if counter >= delay then
+    updateDamage(dt)
+    counter = counter % delay
+  end
 end
 
 function Hit.getStats(unitsInField, spriteAtlas)
