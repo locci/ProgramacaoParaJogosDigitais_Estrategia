@@ -8,18 +8,16 @@ local BattleField = require 'view.battlefield'
 local Stats = require 'view.stats'
 local State = require 'state'
 local Chosestartmonstercoord = require 'state.chose_start_monster_coord'
-local CheckKill = require 'state.check_kill'
 local BuildWaves = require 'model.build_waves'
 local CIRCLEFIELD = require 'battle.circlefield'
 local Indexer = require 'database.indexer'
-local Sound = require 'common.sound'
+local SOUND = require 'common.sound'
 local Hit = require 'battle.hit'
 
 local castlePos = {0,0}
 local landscp = {}
 table.insert(landscp, castlePos)
 local heart = {}
-local nameHero = 'warrior'
 
 local PlayStageState = require 'common.class' (State)
 
@@ -63,7 +61,7 @@ function PlayStageState:_load_view()
   self:view('bg'):add('cursor', self.cursor)
   self:view('hud'):add('gold', self.gold)
   self:view('hud'):add('lives', self.lives)
-  Sound:play('theme', 0.4)
+  SOUND.play('theme', 0.4)
 end
 
 local check_position = function(x, y)
@@ -83,15 +81,14 @@ function PlayStageState:_load_Landscape(battlefield, landscape)
   local worldSize = {lower = -6, upper = 6}  math.randomseed(os.time())
   -- mundo 6x6 não preciso checar colisão na criação dos monstros.
   for _, object in ipairs(landscape) do
-      local unit = object['type']
       local length = object['num']
       local tab = {}
-      for i=1, length do
+      for _=1, length do
         local x = math.random(worldSize.lower,worldSize.upper)
         local y = math.random(worldSize.lower,worldSize.upper)
         local aux = self.battlefield:tile_to_screen(Vec(x,y):get())
 
-        local unit = self:_create_unit_at(object.type, aux, true)
+        self:_create_unit_at(object.type, aux, true)
 
         if check_position(x, y) then
           table.insert(tab,x)
@@ -125,7 +122,7 @@ function PlayStageState:_move_unit_at(monster, pos)
 end
 
 function PlayStageState:_load_units()
-  local pos = self.battlefield:tile_to_screen(0, 0)--mudar para o centro
+  local pos --= self.battlefield:tile_to_screen(0, 0)--mudar para o centro
   self.units = {}
   -- Parametrizar a cidade desenhada
   pos = self.battlefield:tile_to_screen(0, 0)
@@ -138,7 +135,7 @@ function PlayStageState:_load_units()
   end
 
   -- Ainda da pra melhorar (usar os limites do quadro de brodas brancas como referencia para a posicao)
-  herosMenu = require 'database.herosMenu'
+  local herosMenu = require 'database.herosMenu'
   for _, hero in ipairs(herosMenu) do
     pos = self.battlefield:tile_to_screen(hero.pos:get())
     -- criar objeto guerreiro
@@ -154,7 +151,7 @@ function PlayStageState:_load_units()
   self.monsters = {}
 end
 
-function PlayStageState:on_mousepressed(_, _, button)
+function PlayStageState:on_mousepressed(_, _, _)
 
   -- Parametrizar o heroi a ser posto na tela
   local cursor = Vec(self.cursor:get_position())
@@ -195,14 +192,6 @@ function PlayStageState:on_mousepressed(_, _, button)
   end
 end
 
-function sleep(s)
-  local delay = 8000000
-
-  while delay > 0 do
-    delay = delay - s
-  end
-end
-
 local myMonsters = {}
 local stop = true
 local coorX = 0
@@ -229,8 +218,6 @@ local function go(posi, destinyX, destinyY)
   return X, Y, posi['x'], posi['y']
 end
 
-local playHit = 0
-
 function PlayStageState:update(dt)
   local x = 0 local y = 0
   self.wave:update(dt)
@@ -238,19 +225,19 @@ function PlayStageState:update(dt)
   Hit.getStats(unitsInField, self.atlas)
   Hit:updateBattle(dt)
 
+  local tab
   local pending = self.wave:poll()
   while pending > 0 do --calcular o caminho
     if stop then
       stop = false
         math.randomseed(os.time())
-        local vel  = 0
+        local vel
         local cont = 1
         local waves = self.stage.waves
-        local aux = BuildWaves:build_wave(waves)
+        local aux = BuildWaves.build_wave(waves)
         local type
-        local num = 0
+        local num
         local cont_monster = 0
-        local tab = {}
         while cont <= #aux do --calcular o caminho/inserir numero correto de monstros
            tab = aux[cont]
            type = tab[1]
@@ -272,20 +259,19 @@ function PlayStageState:update(dt)
     pending = pending - 1
   end
 
-  tab = {}
-  local aux = {}
+  --tab = {}
+  local aux
   local hit = 0
-  local num = 10
+  --local num
   local contDeath = 9
   local heartCont = 1
-  local cont = 0
 
   for _, monster in ipairs(myMonsters) do--realizar o movimento
       aux = monster[1]
       local pos = aux[1]
       local sprite_instance = self.atlas:get(monster)
     --verifico colisoes com os ostaculos
-      if CIRCLEFIELD:checkCollision(pos['x'], pos['y'], landscp)  then
+      if CIRCLEFIELD.checkCollision(pos['x'], pos['y'], landscp)  then
           coorX, coorY, pos['x'], pos['y'] = go(pos, 300, 300)
           sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
       else
@@ -298,7 +284,7 @@ function PlayStageState:update(dt)
           monster:changeHp(monster:get_hp())
 
           if aux[5] == true then
-               Sound:play('hitcapital', 0.4)
+               SOUND.play('hitcapital', 0.4)
                aux[5] = false
           end
           if hit % 3  == 0 then
@@ -311,7 +297,6 @@ function PlayStageState:update(dt)
                heartCont = heartCont + 1
           else
              stop = false
-             local gameover = true
           end
     end
   end

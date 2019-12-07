@@ -37,7 +37,7 @@ function Unit:get_cost()
   return self.spec.cost
 end
 
-function Unit:getPos(pos)
+function Unit:getPos()
   return self.pos
 end
 

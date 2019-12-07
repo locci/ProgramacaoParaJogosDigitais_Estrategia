@@ -9,15 +9,15 @@
 
 local SOUND = {}
 
-local function auxPlay(name, vol, pitch)
-  local name = "assets/sound/" .. name .. ".ogg"
+local function auxPlay(arcName, vol, pitch)
+  local name = "assets/sound/" .. arcName .. ".ogg"
   local src1 = love.audio.newSource(name, "static")
   src1:setVolume(vol)
   if pitch then src1:setPitch(pitch) end
   src1:play()
 end
 
-function SOUND:play(soundName, vol, pitch)
+function SOUND.play(soundName, vol, pitch)
   auxPlay(soundName, vol, pitch)
 end
 

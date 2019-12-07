@@ -1,11 +1,11 @@
 --alexandre
 --11/29/2019
 
-local BUILWAVE = {}
+local BUILDWAVE = {}
 
-function BUILWAVE:build_wave(wave)
+function BUILDWAVE.build_wave(wave)
 
-      local tab = {}
+      local tab
       local aux = {}
       for _, j in pairs(wave) do
         tab = j
@@ -17,4 +17,4 @@ function BUILWAVE:build_wave(wave)
 
 end
 
-return BUILWAVE
+return BUILDWAVE

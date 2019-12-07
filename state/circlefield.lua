@@ -1,7 +1,7 @@
 
 local CIRCLEFIELD = {}
 
-function CIRCLEFIELD:checkCollision(posX , posY, glandscape)
+function CIRCLEFIELD.checkCollision(posX , posY, glandscape)
 
  for _, j in pairs(glandscape) do
     if j['x'] ~= nil and j['y'] ~= nil then

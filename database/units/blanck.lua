@@ -9,6 +9,6 @@
 return {
     name = "blanck",
     max_hp = 80,
-    appearance = 'blanck'
+    appearance = 'blanck',
     cost = 1,
 }

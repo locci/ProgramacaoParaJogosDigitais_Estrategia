@@ -10,8 +10,8 @@ local CHOOSESTARTCOORD = {}
 
 math.randomseed(os.time())
 
-function CHOOSESTARTCOORD:origen_coord(x, y)
-
+function CHOOSESTARTCOORD.origen_coord()
+    local x, y
     local orin  = math.random(100)
     if orin < 25 then
         x = math.random(-7,7)
@@ -34,4 +34,3 @@ function CHOOSESTARTCOORD:origen_coord(x, y)
 end
 
 return CHOOSESTARTCOORD
-

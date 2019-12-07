@@ -1,7 +1,6 @@
 
 local hitDamage = 30
 local fieldRadius = 100
-local level = 1
 
 return {
   name = "archer",

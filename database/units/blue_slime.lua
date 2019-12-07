@@ -15,5 +15,4 @@ return {
     max_hp = 4,
     appearance = 'blue_slime',
     cost = 30,
-    
 }

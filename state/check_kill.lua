@@ -8,7 +8,7 @@
 
 local CHECKKILL = {}
 
-function CHECKKILL:check_kill(num)
+function CHECKKILL.check_kill(num)
 
     if math.fmod(num,3) == 0 then return true end
     return false
