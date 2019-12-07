@@ -16,8 +16,8 @@ local Sound = require 'common.sound'
 local Hit = require 'battle.hit'
 
 local castlePos = {0,0}
-local landscp = {}
-table.insert(landscp, castlePos)
+local landscape = {}
+table.insert(landscape, castlePos)
 local heart = {}
 local nameHero = 'warrior'
 
@@ -67,7 +67,7 @@ function PlayStageState:_load_view()
 end
 
 local check_position = function(x, y)
-  for _, pos in ipairs(landscp) do
+  for _, pos in ipairs(landscape) do
     if pos[1] == x and pos[2] == y then
       return false
     end
@@ -96,10 +96,10 @@ function PlayStageState:_load_Landscape(battlefield, landscape)
         if check_position(x, y) then
           table.insert(tab,x)
           table.insert(tab,y)
-          table.insert(landscp,tab)
+          table.insert(landscape,tab)
           tab = {}
           local pos = battlefield:tile_to_screen(x, y)
-          table.insert(landscp,pos)
+          table.insert(landscape,pos)
           self:_create_unit_at(object.type, pos, true)
         end
       end
@@ -277,7 +277,7 @@ function PlayStageState:update(dt)
       local pos = aux[1]
       local sprite_instance = self.atlas:get(monster)
     --verifico colisoes com os ostaculos
-      if CIRCLEFIELD:checkCollision(pos['x'], pos['y'], landscp)  then
+      if CIRCLEFIELD:checkCollision(pos['x'], pos['y'], landscape)  then
           coorX, coorY, pos['x'], pos['y'] = go(pos, 300, 300)
           sprite_instance.position:add(Vec(coorX, coorY) * aux[2] * dt)
       else
@@ -286,6 +286,10 @@ function PlayStageState:update(dt)
       end
       if (pos['x'] > 298 and pos['x'] < 301) and (pos['y'] > 298 and pos['y'] < 301) then
           hit = hit + 1
+
+          -- morre e nao e mais desenhado
+          monster:changeHp(monster:get_hp())
+
           if aux[5] == true then
                Sound:play('hitcapital', 0.4)
                aux[5] = false
@@ -296,7 +300,7 @@ function PlayStageState:update(dt)
               contDeath = contDeath + 1
           end
           if heartCont < #heart then
-               sprite_instance.position:add(Vec(0, 0)  * 0 * dt)
+               sprite_instance.position:add(Vec(0, 0)  * 10 * dt)
                heartCont = heartCont + 1
           else
              stop = false
